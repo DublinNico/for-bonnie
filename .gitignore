@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.env
+
+images/
+images_2_square/
+images_2_standard/
+Images_test/
+square_images/
+square_images_backup/
+target_photo/
+grid_test.jpg
+mosaic_output.jpg
