@@ -20,14 +20,14 @@ target_image = Image.open("target_photo/target_bonnie.jpg")
 target_width, target_height = target_image.size
 aspect_ratio = target_height / target_width
 
-cols = 100
+cols = 65
 rows = round(cols * aspect_ratio)
 
 cell_width = target_width // cols
 cell_height = target_height // rows
 
 
-tile_output_size = 100
+tile_output_size = 130
 
 mosaic = Image.new("RGB", (tile_output_size * cols, tile_output_size * rows))
 
@@ -45,7 +45,7 @@ for row in range(rows):
         best_tile = None
         best_distance = None
 
-        REPEAT_PENALTY = 60
+        REPEAT_PENALTY = 50
         COOLDOWN_DISTANCE = 8
         COOLDOWN_PENALTY = 5000
 
