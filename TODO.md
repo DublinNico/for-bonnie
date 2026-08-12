@@ -10,12 +10,16 @@
   - [ ] Centre-crop a photo to a square (tiles need to be square to grid cleanly)
   - [ ] `Image.new` + `.paste` — build a small grid from a few tiles
   - [ ] Average colour of an image via the `.resize((1,1))` trick
-- [ ] Mosaic-assembly algorithm:
-  - [ ] Divide the target photo into a grid of cells
-  - [ ] Compute each cell's average colour
-  - [ ] Compute each tile photo's average colour (once, cache it)
-  - [ ] Match each cell to its nearest-colour tile
-  - [ ] Paste matched tiles into one big canvas
+- [x] Mosaic-assembly algorithm:
+  - [x] Divide the target photo into a grid of cells
+  - [x] Compute each cell's average colour
+  - [x] Compute each tile photo's average colour (once, cache it)
+  - [x] Match each cell to its nearest-colour tile
+  - [x] Paste matched tiles into one big canvas
+- [ ] Reduce tile repeats in the mosaic — add a usage-count penalty to the
+  colour-distance score in the matching loop, so an already-used tile
+  needs to be a noticeably better match to get picked again (spreads
+  repeats out without losing resolution or hard-capping tile use)
 - [ ] Wrap the mosaic builder in a Vercel Python serverless function
   (`api/` folder, `requirements.txt`)
 - [ ] Frontend: render the mosaic, make each tile clickable to view/link
