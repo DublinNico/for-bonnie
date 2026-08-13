@@ -16,12 +16,17 @@
   - [x] Compute each tile photo's average colour (once, cache it)
   - [x] Match each cell to its nearest-colour tile
   - [x] Paste matched tiles into one big canvas
-- [ ] Reduce tile repeats in the mosaic — add a usage-count penalty to the
-  colour-distance score in the matching loop, so an already-used tile
-  needs to be a noticeably better match to get picked again (spreads
-  repeats out without losing resolution or hard-capping tile use)
+- [x] Reduce tile repeats in the mosaic — usage-count penalty (`REPEAT_PENALTY`)
+  plus a spatial cooldown (penalise reuse near a tile's prior positions)
+  added to the colour-distance score in the matching loop
 - [ ] Wrap the mosaic builder in a Vercel Python serverless function
   (`api/` folder, `requirements.txt`)
-- [ ] Frontend: render the mosaic, make each tile clickable to view/link
-  back to its original source photo
+  - Decided: the function returns JSON grid metadata (which tile goes in
+    each cell + grid dimensions), not a rendered image — avoids Vercel's
+    response-size limits and lets the frontend assemble/zoom the mosaic
+    itself
+- [ ] Frontend (Next.js): render the mosaic as a grid built from the API's
+  JSON metadata, with zoom in/out (dropped the click-to-source-photo idea)
+  - Decided: tile photos served as static files from `public/` (committed
+    to the repo), not external storage
 - [ ] Deploy: connect GitHub repo to Vercel, confirm live
