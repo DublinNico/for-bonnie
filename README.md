@@ -1,5 +1,7 @@
 # Bonnie Photomosaic
 
+# Dedicated to Bonnie who gave us 11 wonderful years we will never forget. 
+
 A photomosaic web app that recreates a target photo of Bonnie out of hundreds of smaller tile photos, each picked by closest average colour match.
 
 <img src="docs/mosaic_preview.jpg" alt="Bonnie photomosaic preview" width="300">
