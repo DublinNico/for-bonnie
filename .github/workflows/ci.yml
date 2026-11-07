@@ -1,0 +1,46 @@
+# Continuous integration: checks the website on every pull request and on main.
+# A red X on a PR means one of these steps failed — click "Details" to see which.
+name: CI
+
+on:
+  # Every PR, whatever branch it targets (so stacked PRs are checked too)
+  pull_request:
+  # Every push to main (i.e. after a merge)
+  push:
+    branches: [main]
+
+# If you push again while a run is still going, cancel the old run
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  website:
+    name: Lint, type-check and build the website
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install dependencies (exactly as locked)
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Type-check (TypeScript)
+        run: npx tsc --noEmit
+
+      - name: Production build (same as Vercel runs)
+        run: npm run build
