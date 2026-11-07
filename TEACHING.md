@@ -2,8 +2,11 @@
 
 ## Goal
 Build a photomosaic: one big image of Bonnie made of many small clickable
-photos. Right now the focus is learning Pillow from scratch, one piece at a
-time — not building the final project yet.
+photos — and learn Pillow from scratch along the way, one piece at a time.
+
+The project itself is now built and live (see `PROGRESS.md`). The ladder
+below remains as learning exercises: each rung is a piece the real code in
+`bonnie.py` already uses, so it can be compared against afterwards.
 
 ## Student
 First-year software engineering student. Comfortable with Python basics,
@@ -33,7 +36,13 @@ new to Pillow (PIL).
    2x2 grid.
 5. Get one image's average colour using the `.resize((1,1))` trick.
 
-## Deployment target (later, not now)
-Once Pillow fundamentals are solid: dynamic site via Vercel Python
-serverless function + GitHub, mobile-friendly, tiles clickable to view the
-source photo.
+## Deployment (done)
+Originally planned as a Vercel Python serverless function. Built instead as
+a static Next.js site: `bonnie.py` exports the layout to JSON once, and the
+site reads it — mobile-friendly, tiles clickable to view the source photo.
+Deployed on Vercel from GitHub. How it all works: `BUILD_GUIDE.md`.
+
+## Working style when building together
+- Open each file in the editor before changing it, explain the change in
+  plain language, then show the diff.
+- Ask before pushing anything to GitHub.

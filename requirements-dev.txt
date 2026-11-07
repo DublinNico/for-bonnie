@@ -1,0 +1,7 @@
+# Python packages for the mosaic scripts and their tests.
+#   python -m venv venv
+#   venv\Scripts\activate          (macOS/Linux: source venv/bin/activate)
+#   pip install -r requirements-dev.txt
+Pillow>=13
+pytest>=9
+pytest-cov>=7   # coverage: python -m pytest --cov --cov-branch
