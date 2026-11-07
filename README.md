@@ -19,6 +19,39 @@ A memorial website for Bonnie: a portrait of her recreated from 325 smaller phot
 
 Works on desktop and phones.
 
+## Screenshots
+
+<img src="docs/screenshots/desktop-hero.jpg" alt="The landing page: a portrait of Bonnie sitting in her harness, between the words Bon and nie" width="100%">
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/screenshots/desktop-explorer.jpg" alt="The mosaic zoomed in to show the individual photos, with a card for Photo 253, used 34 times">
+      <br><sub><b>Mosaic explorer</b> — zoom in to the real photos; tap a square to see which one it is</sub>
+    </td>
+    <td width="50%">
+      <img src="docs/screenshots/desktop-show-in-mosaic.jpg" alt="The whole mosaic dimmed, with the 34 squares that use Photo 253 outlined in amber">
+      <br><sub><b>Show in mosaic</b> — lights up every place a photo is used</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="docs/screenshots/desktop-photo-view.jpg" alt="Photo 253 open full size: Bonnie wearing a blue cap, with Show in mosaic and Download buttons">
+      <br><sub><b>Photo view</b> — full size, next/previous, download, and where it appears</sub>
+    </td>
+    <td width="50%">
+      <img src="docs/screenshots/desktop-gallery.jpg" alt="The gallery: a staggered grid of photos of Bonnie, with sort buttons">
+      <br><sub><b>Gallery</b> — all 325 photos, sortable by order or how often they're used</sub>
+    </td>
+  </tr>
+</table>
+
+<img src="docs/screenshots/desktop-dedication.jpg" alt="The dedication: five polaroids above the words For Bonnie, who gave us 11 wonderful years we will never forget" width="100%">
+
+**On phones**
+
+<img src="docs/screenshots/mobile.jpg" alt="Four phone screens: the landing page, the zoomed-in mosaic with a photo card, the gallery, and the dedication" width="100%">
+
 ## How it works
 
 - A Python pipeline (`bonnie.py`, built with Pillow) computes the average colour of every tile photo and of every cell in the target image, using the `.resize((1, 1))` trick, with `LANCZOS` resampling for accuracy.
