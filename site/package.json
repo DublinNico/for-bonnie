@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:py": "cd .. && python -m pytest"
+    "test:py": "cd .. && python -m pytest",
+    "test:integration": "next build && vitest run -c vitest.integration.config.mts"
   },
   "dependencies": {
     "next": "16.3.1",
@@ -28,11 +29,13 @@
     "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/supertest": "^7.2.1",
     "@vitejs/plugin-react": "^6.2.1",
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "happy-dom": "^21.0.4",
+    "supertest": "^7.3.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.1.0"
