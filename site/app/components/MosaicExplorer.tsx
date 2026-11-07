@@ -3,14 +3,23 @@
 /* eslint-disable @next/next/no-img-element -- pre-sized static assets */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { photoLabel, tileUrl, type MosaicData, type TileSize } from "../lib/types";
-
-/** screen = world * scale + offset, where one world unit is one mosaic cell */
-type View = { scale: number; x: number; y: number };
+import {
+  MAX_CELL_PX,
+  cellAt as cellIndexAt,
+  clampView,
+  minScaleFor,
+  minimapRect,
+  pinchView,
+  scaleFromSlider,
+  sliderFromScale,
+  tileTier,
+  visibleCells,
+  zoomAround,
+  zoomPercent as zoomPercentFor,
+  type View,
+} from "../lib/view";
 
 const PREVIEW_SRC = "/mosaic-preview.webp";
-const MAX_CELL_PX = 360; // most zoomed-in: one cell is this many CSS pixels
-const TILES_FROM_PX = 16; // below this (device px per cell) the preview image is enough
-const SM_FROM_PX = 100; // above this, swap the 96px tiles for the 400px ones
 
 type Props = {
   data: MosaicData;
@@ -50,10 +59,7 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
   const [hint, setHint] = useState(false);
   const hintTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const minScale = useCallback(() => {
-    const { w, h } = size.current;
-    return Math.min(w / cols, h / rows) * 0.92;
-  }, [cols, rows]);
+  const minScale = useCallback(() => minScaleFor(size.current, { cols, rows }), [cols, rows]);
 
   // ---------------------------------------------------------------- drawing
   // Batch redraws into the next animation frame. Calls the latest `draw` via a ref,
@@ -96,14 +102,10 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
     if (pre?.complete && pre.naturalWidth) ctx.drawImage(pre, x, y, cols * scale, rows * scale);
 
     // 2. Real tile photos for the cells on screen, once they're big enough to see
-    const c0 = Math.max(0, Math.floor(-x / scale));
-    const c1 = Math.min(cols - 1, Math.floor((w - x) / scale));
-    const r0 = Math.max(0, Math.floor(-y / scale));
-    const r1 = Math.min(rows - 1, Math.floor((h - y) / scale));
-    const cellDevicePx = scale * dpr;
+    const { c0, c1, r0, r1 } = visibleCells(view.current, { w, h }, { cols, rows });
+    const tier = tileTier(scale * dpr);
 
-    if (cellDevicePx > TILES_FROM_PX) {
-      const tier: TileSize = cellDevicePx > SM_FROM_PX ? "sm" : "xs";
+    if (tier) {
       for (let r = r0; r <= r1; r++) {
         const top = Math.round(y + r * scale);
         const bottom = Math.round(y + (r + 1) * scale);
@@ -152,27 +154,15 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
   const setView = useCallback(
     (next: View) => {
       const { w, h } = size.current;
-      const min = minScale();
-      const scale = Math.min(Math.max(next.scale, min), MAX_CELL_PX);
-      const fit = (pos: number, worldSize: number, screen: number) => {
-        const extent = worldSize * scale;
-        return extent <= screen ? (screen - extent) / 2 : Math.min(0, Math.max(screen - extent, pos));
-      };
-      view.current = { scale, x: fit(next.x, cols, w), y: fit(next.y, rows, h) };
-      setUi({ view: view.current, w, h, minScale: min });
+      view.current = clampView(next, { w, h }, { cols, rows });
+      setUi({ view: view.current, w, h, minScale: minScale() });
       scheduleDraw();
     },
     [cols, rows, minScale, scheduleDraw],
   );
 
   const zoomAt = useCallback(
-    (factor: number, sx: number, sy: number) => {
-      const v = view.current;
-      const min = minScale();
-      const scale = Math.min(Math.max(v.scale * factor, min), MAX_CELL_PX);
-      const k = scale / v.scale;
-      setView({ scale, x: sx - (sx - v.x) * k, y: sy - (sy - v.y) * k });
-    },
+    (factor: number, sx: number, sy: number) => setView(zoomAround(view.current, factor, sx, sy, minScale())),
     [minScale, setView],
   );
 
@@ -220,12 +210,7 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
 
   // ---------------------------------------------------------------- input
   const cellAt = useCallback(
-    (sx: number, sy: number) => {
-      const { scale, x, y } = view.current;
-      const c = Math.floor((sx - x) / scale);
-      const r = Math.floor((sy - y) / scale);
-      return c >= 0 && c < cols && r >= 0 && r < rows ? r * cols + c : null;
-    },
+    (sx: number, sy: number) => cellIndexAt(view.current, sx, sy, { cols, rows }),
     [cols, rows],
   );
 
@@ -308,12 +293,7 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
       const [a, b] = pts;
       const dist = Math.hypot(a.x - b.x, a.y - b.y);
       const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-      const scale = g.view.scale * (dist / g.pinchDist);
-      // Keep the point that was under the fingers' midpoint under it
-      const wx = (g.pinchMid.x - g.view.x) / g.view.scale;
-      const wy = (g.pinchMid.y - g.view.y) / g.view.scale;
-      const clamped = Math.min(Math.max(scale, minScale()), MAX_CELL_PX);
-      setView({ scale: clamped, x: mid.x - wx * clamped, y: mid.y - wy * clamped });
+      setView(pinchView(g.view, g.pinchMid, g.pinchDist, mid, dist, minScale()));
     } else if (pts.length === 1) {
       const dx = p.x - g.startX;
       const dy = p.y - g.startY;
@@ -361,15 +341,9 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
   // ---------------------------------------------------------------- overlays
   const { scale, x, y } = ui.view;
   const zoomed = scale > ui.minScale * 1.01;
-  const zoomPercent = Math.round((scale / ui.minScale) * 100);
-  const sliderValue = Math.log(scale / ui.minScale) / Math.log(MAX_CELL_PX / ui.minScale);
-
-  const mini = {
-    left: (Math.max(0, -x / scale) / cols) * 100,
-    top: (Math.max(0, -y / scale) / rows) * 100,
-    width: (Math.min(ui.w / scale, cols) / cols) * 100,
-    height: (Math.min(ui.h / scale, rows) / rows) * 100,
-  };
+  const zoomPercent = zoomPercentFor(scale, ui.minScale);
+  const sliderValue = sliderFromScale(scale, ui.minScale);
+  const mini = minimapRect(ui.view, { w: ui.w, h: ui.h }, { cols, rows });
 
   const jumpTo = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -459,10 +433,10 @@ export default function MosaicExplorer({ data, focusPhoto, onClearFocus, onOpenP
             min={0}
             max={1}
             step={0.001}
-            value={Number.isFinite(sliderValue) ? sliderValue : 0}
+            value={sliderValue}
             aria-label="Zoom level"
             onChange={(e) => {
-              const target = ui.minScale * Math.pow(MAX_CELL_PX / ui.minScale, Number(e.target.value));
+              const target = scaleFromSlider(Number(e.target.value), ui.minScale);
               zoomAt(target / scale, ui.w / 2, ui.h / 2);
             }}
           />

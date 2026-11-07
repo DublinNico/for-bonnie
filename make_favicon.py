@@ -66,16 +66,22 @@ def draw_icon(size, font_path, rounded=True):
     return img.resize((size, size), Image.LANCZOS)
 
 
-font_path = find_instrument_serif()
-print(f"font: {font_path.name}")
+def main():
+    font_path = find_instrument_serif()
+    print(f"font: {font_path.name}")
 
-draw_icon(512, font_path).save(APP / "icon.png")
-draw_icon(180, font_path, rounded=False).convert("RGB").save(APP / "apple-icon.png")
+    draw_icon(512, font_path).save(APP / "icon.png")
+    draw_icon(180, font_path, rounded=False).convert("RGB").save(APP / "apple-icon.png")
 
-# .ico holds several sizes in one file; draw each size separately so small ones stay crisp
-ico_sizes = [16, 32, 48]
-frames = [draw_icon(s, font_path) for s in ico_sizes]
-frames[-1].save(APP / "favicon.ico", sizes=[(s, s) for s in ico_sizes], append_images=frames[:-1])
+    # .ico holds several sizes in one file; draw each size separately so small ones stay crisp
+    ico_sizes = [16, 32, 48]
+    frames = [draw_icon(s, font_path) for s in ico_sizes]
+    frames[-1].save(APP / "favicon.ico", sizes=[(s, s) for s in ico_sizes], append_images=frames[:-1])
 
-for name in ("favicon.ico", "icon.png", "apple-icon.png"):
-    print(f"saved site/app/{name} ({(APP / name).stat().st_size:,} bytes)")
+    for name in ("favicon.ico", "icon.png", "apple-icon.png"):
+        print(f"saved site/app/{name} ({(APP / name).stat().st_size:,} bytes)")
+
+
+# Only draw the icons when run as a script, not when a test imports this file
+if __name__ == "__main__":
+    main()

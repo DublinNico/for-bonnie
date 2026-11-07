@@ -4,3 +4,4 @@
 #   pip install -r requirements-dev.txt
 Pillow>=13
 pytest>=9
+pytest-cov>=7   # coverage: python -m pytest --cov --cov-branch

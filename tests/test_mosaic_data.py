@@ -17,12 +17,12 @@ def load_mosaic():
         return json.load(f)
 
 
-def test_grid_has_one_entry_per_cell():
+def test_UT_045_real_layout_has_one_entry_per_cell():
     mosaic = load_mosaic()
     assert len(mosaic["grid"]) == mosaic["cols"] * mosaic["rows"]
 
 
-def test_every_photo_in_the_mosaic_has_all_three_web_sizes():
+def test_UT_046_every_photo_in_the_real_layout_has_all_three_web_sizes():
     mosaic = load_mosaic()
     missing = [
         f"{size}/{Path(name).stem}.webp"

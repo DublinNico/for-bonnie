@@ -5,9 +5,10 @@ import type { MosaicData, Photo } from "./types";
 /**
  * Reads the mosaic layout written by bonnie.py and the tile list written by
  * make_web_assets.py. Runs on the server at build time only.
+ *
+ * `publicDir` defaults to the site's public/ folder; tests pass a small fake one.
  */
-export function loadMosaic(): MosaicData {
-  const publicDir = path.join(process.cwd(), "public");
+export function loadMosaic(publicDir = path.join(process.cwd(), "public")): MosaicData {
 
   const raw = JSON.parse(fs.readFileSync(path.join(publicDir, "mosaic.json"), "utf8")) as {
     cols: number;
