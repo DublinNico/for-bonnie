@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Check out the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
@@ -38,6 +38,11 @@ jobs:
 
       - name: Lint (ESLint)
         run: npm run lint
+
+      # Next.js generates some global types (e.g. LayoutProps) into .next/.
+      # A fresh CI machine has no .next/ yet, so create them before type-checking.
+      - name: Generate Next.js route types
+        run: npx next typegen
 
       - name: Type-check (TypeScript)
         run: npx tsc --noEmit
