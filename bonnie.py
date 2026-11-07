@@ -27,7 +27,7 @@ cell_width = target_width // cols
 cell_height = target_height // rows
 
 
-tile_output_size = 130
+tile_output_size = 180
 
 mosaic = Image.new("RGB", (tile_output_size * cols, tile_output_size * rows))
 
@@ -45,7 +45,7 @@ for row in range(rows):
         best_tile = None
         best_distance = None
 
-        REPEAT_PENALTY = 50
+        REPEAT_PENALTY = 80
         COOLDOWN_DISTANCE = 8
         COOLDOWN_PENALTY = 5000
 
