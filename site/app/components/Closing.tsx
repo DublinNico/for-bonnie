@@ -1,23 +1,24 @@
 /* eslint-disable @next/next/no-img-element -- pre-sized static assets */
 
-// Rotation for each polaroid in the fan, outermost first so the centre one sits on top
+// Left to right. Each card gets a slight tilt (degrees) and drop (px) so the row
+// reads as a gentle arc of scattered polaroids, without any of them overlapping.
 const POLAROIDS = [
-  { id: "tile_322", rotate: -24 },
-  { id: "tile_036", rotate: -12 },
-  { id: "tile_188", rotate: 12 },
-  { id: "tile_045", rotate: 24 },
-  { id: "tile_290", rotate: 0 },
+  { id: "tile_322", rotate: -7, drop: 28 },
+  { id: "tile_036", rotate: -3, drop: 8 },
+  { id: "tile_290", rotate: 1, drop: 0 },
+  { id: "tile_188", rotate: 4, drop: 8 },
+  { id: "tile_045", rotate: 7, drop: 28 },
 ];
 
 export default function Closing({ photoCount }: { photoCount: number }) {
   return (
     <footer className="closing" id="for-bonnie">
       <div className="polaroids" aria-hidden>
-        {POLAROIDS.map(({ id, rotate }) => (
+        {POLAROIDS.map(({ id, rotate, drop }) => (
           <div
             key={id}
             className="polaroid"
-            style={{ transform: `rotate(${rotate}deg)`, top: rotate === 0 ? -10 : undefined }}
+            style={{ "--rotate": `${rotate}deg`, "--drop": `${drop}px` } as React.CSSProperties}
           >
             <img src={`/tiles/sm/${id}.webp`} alt="" loading="lazy" />
           </div>

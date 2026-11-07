@@ -1160,22 +1160,32 @@ img {
   overflow: hidden;
 }
 
+/* Side by side with a gap so every photo is fully visible. On phones they wrap
+   into rows of 3 + 2; on desktop one row, with --arc turning the drops into an arc. */
 .polaroids {
-  position: relative;
-  height: 250px;
-  margin: 0 auto;
+  --arc: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px 14px;
+  padding: 12px 0 calc(28px * var(--arc));
 }
 
 .polaroid {
-  --size: 110px;
-  position: absolute;
-  left: 50%;
-  top: 30px;
-  margin-left: calc((var(--size) + 14px) / -2);
+  --size: 88px; /* 3 cards + 2 gaps = 334px, fits a 390px phone with room to spare */
+  flex: none;
   padding: 7px 7px 24px;
   background: #fbf8f3;
   box-shadow: 0 14px 22px -12px rgba(43, 31, 23, 0.45);
-  transform-origin: 50% 420px;
+  transform: translateY(calc(var(--drop, 0px) * var(--arc))) rotate(var(--rotate, 0deg));
+  transition: transform 0.35s ease;
+}
+
+@media (hover: hover) {
+  .polaroid:hover {
+    transform: translateY(-6px) rotate(0deg) scale(1.04);
+  }
 }
 
 .polaroid img {
@@ -1248,13 +1258,13 @@ img {
     flex-direction: column;
   }
   .polaroids {
-    height: 320px;
+    --arc: 1;
+    flex-wrap: nowrap;
+    gap: clamp(14px, 2vw, 32px);
   }
   .polaroid {
-    --size: 170px;
-    top: 0;
+    --size: clamp(110px, 10.5vw, 170px);
     padding: 10px 10px 34px;
-    transform-origin: 50% 600px;
   }
   .closing-text {
     margin-top: 40px;
