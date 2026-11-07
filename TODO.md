@@ -6,6 +6,9 @@
 - [x] Run `rename_tiles.py` for real against `images/` (351 photos; 325 square crops in `square_images/` are used as tiles)
 - [x] Add the target photo (big image the mosaic recreates) — `target_photo/target_bonnie.jpg`
 
+## Tutorial
+ - [ ] Create a comprehensive tutorial for the website build. 
+
 ## Pillow fundamentals (learning exercises — see TEACHING.md)
 - [ ] Pillow fundamentals, applied directly to real tiles/target (not throwaway drills):
   - [ ] Open an image; inspect `.size`, `.mode`, `.format`
