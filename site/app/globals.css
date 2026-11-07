@@ -244,6 +244,7 @@ img {
   .hero {
     --ph: min(calc(100svh - 190px), 760px);
     --pw: calc(var(--ph) * 900 / 1592);
+    --title-gap: clamp(24px, 3vw, 56px); /* space between "Bon" / "nie" and the mosaic */
     height: max(100svh, 720px);
     padding: 0;
   }
@@ -268,11 +269,12 @@ img {
     position: absolute;
     top: calc(104px + var(--ph) * 0.2);
   }
+  /* Each word sits a clear gap away from the mosaic's edge */
   .hero-title .bon {
-    right: calc(50% + var(--pw) / 2 - 0.1em);
+    right: calc(50% + var(--pw) / 2 + var(--title-gap));
   }
   .hero-title .nie {
-    left: calc(50% + var(--pw) / 2 - 0.05em);
+    left: calc(50% + var(--pw) / 2 + var(--title-gap));
   }
   .hero-side {
     display: none;
