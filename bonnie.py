@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from PIL import Image
 
@@ -30,6 +31,10 @@ cell_height = target_height // rows
 tile_output_size = 180
 
 mosaic = Image.new("RGB", (tile_output_size * cols, tile_output_size * rows))
+
+# Filename of the winning tile for every cell, in row-major order
+# (row 0 left-to-right, then row 1, ...). Exported for the website.
+grid = []
 
 for row in range(rows):
     for col in range(cols):
@@ -67,6 +72,7 @@ for row in range(rows):
 
         tile_usage[best_tile] += 1
         tile_last_position[best_tile] = (row, col)
+        grid.append(best_tile.name)
 
         if best_tile not in resized_tile_cache:
             resized_tile_cache[best_tile] = Image.open(best_tile).resize((tile_output_size, tile_output_size), Image.LANCZOS)
@@ -75,3 +81,18 @@ for row in range(rows):
         mosaic.paste(matched_tile, (col * tile_output_size, row * tile_output_size))
 
 mosaic.save("mosaic_output.jpg")
+
+# Export the grid layout so the website can rebuild the mosaic itself
+assert len(grid) == cols * rows, f"expected {cols * rows} cells, got {len(grid)}"
+
+mosaic_data = {
+    "cols": cols,
+    "rows": rows,
+    "grid": grid,
+}
+
+json_path = Path("site/public/mosaic.json")
+with open(json_path, "w") as f:
+    json.dump(mosaic_data, f)
+
+print(f"Saved {json_path} ({cols} x {rows} = {len(grid)} cells)")
