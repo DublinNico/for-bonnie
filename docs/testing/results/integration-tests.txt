@@ -1,0 +1,34 @@
+
+ RUN  v5.1.0 C:/Dev/Web Dev/Web Dev/Bonnie/site
+
+stdout | integration/site.test.ts
+✓ Running next.config.ts took
+
+ ✓ integration/site.test.ts > the page / > IT-001 GET / returns the page
+ ✓ integration/site.test.ts > the page / > IT-002 the page shows every photo and the counts match the data files
+ ✓ integration/site.test.ts > the page / > IT-003 HEAD / answers without a body
+ ✓ integration/site.test.ts > the page / > IT-004 every image the page uses loads, as an image
+ ✓ integration/site.test.ts > the page / > IT-005 the icons in the page head load with the right types
+ ✓ integration/site.test.ts > the page / > IT-006 scripts and styles load and are cached long-term
+ ✓ integration/site.test.ts > the page / > IT-007 the page has no forms that could submit data
+ ✓ integration/site.test.ts > the data /mosaic.json > IT-008 GET /mosaic.json returns exactly the file bonnie.py wrote
+ ✓ integration/site.test.ts > the data /mosaic.json > IT-009 every photo in the layout is served at all three sizes, as WebP
+ ✓ integration/site.test.ts > bad requests (wrong values) > IT-010 photos, sizes and extensions that don't exist are 404
+ ✓ integration/site.test.ts > bad requests (wrong values) > IT-011 path-traversal tricks can't reach files outside public/
+ ✓ integration/site.test.ts > access control (no login exists: private files must never be served) > IT-012 secrets, config and source code are not reachable
+ ✓ integration/site.test.ts > access control (no login exists: private files must never be served) > IT-013 PUT, DELETE and POST are refused and change nothing
+ ✓ integration/site.test.ts > access control (no login exists: private files must never be served) > IT-014 POST to the page accepts no data (405 from next start / Vercel; this in-process mode just returns the page)
+ ✓ integration/site.test.ts > access control (no login exists: private files must never be served) > IT-015 [KNOWN ISSUE] write methods on files get a clean 405 locally (next start gives 500; live Vercel gives 405)
+ ✓ integration/site.test.ts > not found (404) > IT-016 unknown pages return a real 404 page that search engines skip
+ ✓ integration/site.test.ts > not found (404) > IT-017 error responses leak no file paths or stack traces
+ ✓ integration/site.test.ts > CORS and headers > IT-018 other websites get no CORS permission from the Next.js server
+ ✓ integration/site.test.ts > CORS and headers > IT-019 cross-origin preflight requests are not granted
+ ✓ integration/site.test.ts > CORS and headers > IT-020 the data file is revalidated so updates show up
+ ✓ integration/site.test.ts > CORS and headers > IT-021 the server doesn't advertise its framework (no X-Powered-By)
+ ✓ integration/site.test.ts > CORS and headers > IT-022 standard security headers are sent on the page, the data and the images
+
+ Test Files  1 passed (1)
+      Tests  21 passed | 1 expected fail (22)
+   Start at  18:27:49
+   Duration  1.72s (tests 90%, import 8%, transform 2%)
+

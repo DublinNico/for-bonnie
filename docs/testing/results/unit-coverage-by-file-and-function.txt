@@ -1,0 +1,48 @@
+PER FILE                        stmts% branch%  funcs%  lines%
+app/components/Closing.tsx      100.00  100.00  100.00  100.00
+app/components/Gallery.tsx      100.00  100.00  100.00  100.00
+app/components/Hero.tsx         100.00  100.00  100.00  100.00
+app/components/HowItWasMade.tsx  100.00  100.00  100.00  100.00
+app/components/Lightbox.tsx      97.44   96.43  100.00  100.00
+app/components/MosaicExperience.tsx  100.00  100.00  100.00  100.00
+app/components/MosaicExplorer.tsx   63.18   53.78   68.09   65.94
+app/layout.tsx                    0.00  100.00    0.00    0.00
+app/lib/load-mosaic.ts          100.00   80.00  100.00  100.00
+app/lib/types.ts                100.00  100.00  100.00  100.00
+app/lib/view.ts                 100.00  100.00  100.00  100.00
+app/page.tsx                      0.00  100.00    0.00    0.00
+
+PER FUNCTION (key logic)                        calls branches taken
+Gallery.tsx:(anonymous_0)                           47      0/0 
+Gallery.tsx:(anonymous_1)                           30      2/2 
+Gallery.tsx:(anonymous_2)                            9      2/2 
+Gallery.tsx:Gallery                                 26      2/2 
+Gallery.tsx:(anonymous_4)                           18      0/0 
+Gallery.tsx:(anonymous_5)                           84      0/0 
+Gallery.tsx:(anonymous_6)                           86      0/0 
+Gallery.tsx:(anonymous_7)                           84      0/0 
+Gallery.tsx:(anonymous_8)                           78      0/0 
+Gallery.tsx:(anonymous_9)                            6      0/0 
+Gallery.tsx:(anonymous_10)                         116      2/2 
+Gallery.tsx:(anonymous_11)                           4      0/0 
+load-mosaic.ts:loadMosaic                            6      4/5   missing: line 40 (binary-expr, path 2)
+load-mosaic.ts:(anonymous_1)                        13      0/0 
+load-mosaic.ts:(anonymous_2)                        11      0/0 
+load-mosaic.ts:(anonymous_3)                        11      0/0 
+load-mosaic.ts:(anonymous_4)                        11      2/2 
+load-mosaic.ts:(anonymous_5)                        10      1/2   missing: line 40 (binary-expr, path 2)
+types.ts:(anonymous_0)                             181      0/0 
+types.ts:(anonymous_1)                             304      0/0 
+view.ts:minScaleFor                                102      0/0 
+view.ts:clampScale                                  57      0/0 
+view.ts:clampView                                   39      2/2 
+view.ts:(anonymous_3)                               78      2/2 
+view.ts:zoomAround                                  14      0/0 
+view.ts:pinchView                                    1      0/0 
+view.ts:cellAt                                      15      6/6 
+view.ts:visibleCells                                 2      0/0 
+view.ts:tileTier                                     5      4/4 
+view.ts:zoomPercent                                 72      0/0 
+view.ts:sliderFromScale                             77      2/2 
+view.ts:scaleFromSlider                              6      0/0 
+view.ts:minimapRect                                 72      0/0 

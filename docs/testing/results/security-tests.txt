@@ -1,0 +1,27 @@
+
+ RUN  v5.1.0 C:/Dev/Web Dev/Web Dev/Bonnie/site
+
+stdout | tests/security/http.security.test.ts
+✓ Running next.config.ts took
+
+ ✓ tests/security/http.security.test.ts > injection > ST-001 SQL/NoSQL/template payloads in the query string don't crash or change the page
+ ✓ tests/security/http.security.test.ts > injection > ST-002 injection payloads in the URL path are a plain 404
+ ✓ tests/security/http.security.test.ts > injection > ST-003 script payloads sent to the site are never reflected back into a page
+ ✓ tests/security/http.security.test.ts > injection > ST-004 injection payloads in a request body are refused, not processed
+ ✓ tests/security/http.security.test.ts > authentication, tokens and admin > ST-005 there is no login, auth, admin or API endpoint to attack
+ ✓ tests/security/http.security.test.ts > authentication, tokens and admin > ST-006 the site never sets cookies, so there is no session or token to steal or tamper with
+ ✓ tests/security/http.security.test.ts > authentication, tokens and admin > ST-007 forged or tampered tokens unlock nothing: writes are still refused
+ ✓ tests/security/http.security.test.ts > authentication, tokens and admin > ST-008 a burst of requests doesn't break the server (no login exists to rate-limit)
+ ✓ tests/security/http.security.test.ts > secrets never reach the browser > ST-009 no secret (from .env.local or named in SECRET_ENV_VARS) appears in any file the browser can download
+ ✓ tests/security/http.security.test.ts > secrets never reach the browser > ST-010 source maps (readable original source) are not published
+ ✓ tests/security/http.security.test.ts > secrets never reach the browser > ST-011 the page links nowhere outside the site (nothing to hijack via target=_blank)
+ ✓ tests/security/http.security.test.ts > secrets never reach the browser > ST-012 hidden server files stay hidden, whatever the spelling
+ ✓ tests/security/xss.security.test.tsx > hostile photo names are shown as text, never run > ST-013 the gallery renders hostile photo names harmlessly
+ ✓ tests/security/xss.security.test.tsx > hostile photo names are shown as text, never run > ST-014 the photo view renders hostile photo names harmlessly
+ ✓ tests/security/xss.security.test.tsx > hostile photo names are shown as text, never run > ST-015 the data loader refuses photo names that don't match a real image file
+
+ Test Files  2 passed (2)
+      Tests  15 passed (15)
+   Start at  18:27:52
+   Duration  1.28s (tests 52%, environment 25%, import 21%, transform 2%, worker 1%)
+

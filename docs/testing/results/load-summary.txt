@@ -1,0 +1,4 @@
+page-load    requests   400 | median 1ms | p95 4ms | p99 5ms | max 9ms | vusers 100 failed 0 | ok: http.response_time.p95 < 500
+gallery      requests  1000 | median 1ms | p95 2ms | p99 3ms | max 4ms | vusers 50 failed 0 | ok: http.response_time.p95 < 500
+soak         requests  3600 | median 1ms | p95 3ms | p99 4ms | max 8ms | vusers 300 failed 0 | ok: http.response_time.p95 < 1000
+bad-traffic  requests   250 | median 1ms | p95 2ms | p99 2ms | max 3ms | vusers 50 failed 0 | ok: http.response_time.p95 < 2000

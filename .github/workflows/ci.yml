@@ -12,12 +12,17 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# The jobs only read the code: give the workflow's GitHub token no more than that
+permissions:
+  contents: read
+
 # FAKE, test-only values — never real secrets. The site needs no secrets at all; these
 # exist so the security test ST-009 can prove the build never copies environment
-# secrets into files that browsers download.
+# secrets into files that browsers download. SECRET_ENV_VARS tells ST-009 which to check.
 env:
   VERCEL_OIDC_TOKEN: fake-test-token-not-a-real-secret-0001
   FAKE_TEST_API_KEY: fake-test-api-key-not-a-real-secret-0002
+  SECRET_ENV_VARS: VERCEL_OIDC_TOKEN,FAKE_TEST_API_KEY
 
 jobs:
   # ------------------------------------------------------------------------ backend
@@ -29,23 +34,8 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: requirements-dev.txt
-
-      - name: Install Python dependencies
-        run: pip install -r requirements-dev.txt pip-audit
-
-      # The favicon tests need fonts from a site build, so they skip here (with a reason)
-      - name: Python tests with branch coverage
-        run: python -m pytest -rs --cov=bonnie --cov=make_web_assets --cov=make_favicon --cov=rename_tiles --cov-branch --cov-report=term-missing --cov-report=xml
-
-      - name: Audit Python dependencies (pip-audit)
-        run: pip-audit -r requirements-dev.txt
+          persist-credentials: false # don't leave the token on disk for later steps
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -63,9 +53,26 @@ jobs:
         working-directory: site
         run: npm audit --omit=dev --audit-level=high
 
+      # Built first so the Python favicon tests can use the fonts Next.js downloads
       - name: Production build
         working-directory: site
         run: npm run build
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install Python dependencies
+        run: pip install -r requirements-dev.txt pip-audit
+
+      - name: Python tests with branch coverage
+        run: python -m pytest -rs --cov=bonnie --cov=make_web_assets --cov=make_favicon --cov=rename_tiles --cov-branch --cov-report=term-missing --cov-report=xml
+
+      - name: Audit Python dependencies (pip-audit)
+        run: pip-audit -r requirements-dev.txt
 
       - name: Integration tests (Supertest, over HTTP)
         working-directory: site
@@ -93,6 +100,8 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -103,6 +112,17 @@ jobs:
 
       - name: Install dependencies (exactly as locked)
         run: npm ci
+
+      # next and eslint-config-next must be the same version. Dependabot groups them,
+      # but grouping alone can't stop a PR that updates only one — this check does.
+      - name: Next.js and its lint config are the same version
+        run: |
+          node -e '
+            const p = require("./package.json");
+            const next = p.dependencies.next, lint = p.devDependencies["eslint-config-next"];
+            if (next !== lint) { console.error(`next ${next} != eslint-config-next ${lint}: update them together`); process.exit(1); }
+            console.log(`next and eslint-config-next both ${next}`);
+          '
 
       - name: Lint (ESLint)
         run: npm run lint
@@ -140,6 +160,8 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -160,8 +182,9 @@ jobs:
       - name: End-to-end tests
         run: npm run test:e2e
 
-      - name: Keep the results if something failed
-        if: failure()
+      # Also when cancelled (e.g. by a newer push), so any traces so far aren't lost
+      - name: Keep the results if something failed or was cancelled
+        if: failure() || cancelled()
         uses: actions/upload-artifact@v7
         with:
           name: playwright-results

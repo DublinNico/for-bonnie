@@ -1,0 +1,112 @@
+MANUAL TEST CASE EXECUTION — 2026-11-08 18:31 — production build (Next.js 16.4.5) on localhost:3400, commit c5beffb
+
+## TC-BB-EP-001 — server URL requests (one representative per partition)
+GET /                                    (valid page)                 -> 200 text/html; charset=utf-8
+GET /mosaic.json                         (valid data)                 -> 200 application/json; charset=UTF-8
+GET /tiles/sm/tile_001.webp              (valid image)                -> 200 image/webp
+GET /tiles/sm/tile_999.webp              (photo that doesn't exist)   -> 404 text/html; charset=utf-8
+GET /tiles/huge/tile_001.webp            (size that doesn't exist)    -> 404 text/html; charset=utf-8
+GET /.env.local                          (private file)               -> 404 text/html; charset=utf-8
+GET /tiles/sm/..%2f..%2fpackage.json     (path traversal)             -> 404 text/html; charset=utf-8
+PUT /mosaic.json                         (write method)               -> 500 text/plain
+GET /no-such-page                        (unknown page)               -> 404 text/html; charset=utf-8
+
+## TC-BB-BVA-002 — cooldown distance boundary (COOLDOWN_DISTANCE = 8 cells, COOLDOWN_PENALTY = 5000)
+  last used at (0,0), now at (0,7) 7 cells away (just below)      -> score  5000  (cooldown applied)
+  last used at (0,0), now at (0,8) 8 cells away (at limit)        -> score     0  (no cooldown)
+  last used at (0,0), now at (0,9) 9 cells away (just above)      -> score     0  (no cooldown)
+  last used at (0,0), now at (5,6) diagonal (5,6) = 7.81 cells    -> score  5000  (cooldown applied)
+  last used at (0,0), now at (6,6) diagonal (6,6) = 8.49 cells    -> score     0  (no cooldown)
+
+## TC-WB-001 — bonnie.tile_score branches
+  B1 last_position is None (never used)      -> 25
+  B2 used before, 1 cell away (< 8)          -> 5105
+  B3 used before, 20 cells away (>= 8)       -> 105
+  (colour distance (255,0,0)-(250,0,0) = 25, REPEAT_PENALTY = 80)
+
+## TC-WB-002 — bonnie.pick_tile branches
+  P1 no tiles at all                         -> None
+  P2 first tile (best_score is None)         -> only
+  P3 later tile scores better (replaces)     -> red
+  P4 later tile ties (doesn't replace)       -> first
+  P5 later tile scores worse (doesn't)       -> red
+
+## TC-WB-005 — rename_tiles branches
+  R1 files renamed (is_file True), R2 folder skipped (is_file False), R3 existing tile_001 name
+     result: ['backup', 'tile_001.jpg', 'tile_002.png', 'tile_003.jpg']
+     contents survive: ['beach.jpg', 'park.png', 'tile_001.jpg']
+     returned: ['tile_001.jpg', 'tile_002.png', 'tile_003.jpg']
+  R4 empty folder (both loops run zero times) -> []
+
+## TC-BB-BVA-003 — image size thresholds (TILES_FROM_PX = 16, SM_FROM_PX = 100)
+  square  15.99 device px -> preview only (null)
+  square     16 device px -> preview only (null)
+  square  16.01 device px -> xs
+  square  99.99 device px -> xs
+  square    100 device px -> xs
+  square 100.01 device px -> sm
+
+## TC-BB-BVA-004 — tap position at the mosaic's edges (view: scale 100, x 10, y 20; grid 4 x 2)
+  left edge - 0.01     (9.99, 50) -> cell null
+  left edge            (10, 50) -> cell 0
+  left edge + 0.01     (10.01, 50) -> cell 0
+  right edge - 0.01    (409.99, 50) -> cell 3
+  right edge           (410, 50) -> cell null
+  right edge + 0.01    (410.01, 50) -> cell null
+  top edge - 0.01      (50, 19.99) -> cell null
+  top edge             (50, 20) -> cell 0
+  bottom edge - 0.01   (50, 219.99) -> cell 4
+  bottom edge          (50, 220) -> cell null
+
+## TC-WB-003 — view.clampView branches (screen 800 x 600, grid 4 x 2; mosaic fits when scale <= 184)
+  C1 fits: centred (x)                     in {"scale":184,"x":999,"y":0}    -> scale 184, x 32
+  C2 too wide, dragged right of 0          in {"scale":360,"x":50,"y":0}     -> scale 360, x 0
+  C3 too wide, dragged past left limit     in {"scale":360,"x":-1000,"y":0}  -> scale 360, x -640
+  C4 too wide, inside the limits           in {"scale":360,"x":-300,"y":0}   -> scale 360, x -300
+  C5 scale below minimum (clamped up)      in {"scale":1,"x":0,"y":0}        -> scale 184, x 32
+  C6 scale above maximum (clamped down)    in {"scale":9999,"x":0,"y":0}     -> scale 360, x 0
+
+## TC-BB-EP-004 — data loader input partitions
+  E1 valid: every name has a web image      -> grid [0,1], photos [{"id":"tile_001","number":1,"uses":1},{"id":"tile_002","number":2,"uses":1}]
+  E2 name with no web image                 -> ERROR: tile_404.jpg is in mosaic.json but has no web image. Run make_web_assets.py.
+  E3 extra non-WebP files in the folder     -> grid [0], photos [{"id":"tile_001","number":1,"uses":1}]
+  E4 photo never used in the mosaic         -> grid [0], photos [{"id":"tile_001","number":1,"uses":1},{"id":"tile_002","number":2,"uses":0}]
+
+## TC-WB-004 — loadMosaic branches
+  L1 .webp filter true/false                 -> grid [0], photos [{"id":"tile_001","number":1,"uses":1}]
+  L2 index found (normal)                    -> grid [0], photos [{"id":"tile_007","number":7,"uses":1}]
+  L3 index not found -> throws               -> ERROR: ghost.jpg is in mosaic.json but has no web image. Run make_web_assets.py.
+  L4 name has digits -> number from name     -> grid [0], photos [{"id":"tile_042","number":42,"uses":1}]
+  L5 name has NO digits -> position fallback -> grid [0,1], photos [{"id":"beach","number":1,"uses":1},{"id":"tile_002","number":2,"uses":1}]
+
+## TC-BB-EP-002 — 'In the mosaic' wording in the photo view
+  never used (uses = 0)        Photo 305 (0 uses) -> shows "Not used", 'Show in mosaic' button absent
+  used once (uses = 1)         -> no photo in the real data has this many uses
+  used many times (uses > 1)   Photo 001 (16 uses) -> shows "16 times", 'Show in mosaic' button present
+
+## TC-BB-EP-003 — gallery sort orders (checked against real usage counts)
+  In order    -> 325 photos; first 3: Photo 001, Photo 002, Photo 003 (uses 16, 50, 25); last: Photo 325 (uses 16); matches expected order: true
+  Most used   -> 325 photos; first 3: Photo 110, Photo 095, Photo 198 (uses 77, 70, 65); last: Photo 305 (uses 0); matches expected order: true
+  Least used  -> 325 photos; first 3: Photo 305, Photo 018, Photo 074 (uses 0, 3, 7); last: Photo 110 (uses 77); matches expected order: true
+  (tie partition: 34 usage values are shared by 2+ photos, so tie-breaking by number is exercised)
+
+## TC-BB-BVA-001 — zoom limits (1280 x 720 window)
+  at minimum: label 100%, zoom-out disabled, zoom-in enabled
+  zoom-out pressed at minimum (below the limit) -> label 100%
+  pressing zoom-in until it disables: 160% -> 256% -> 410% -> 655% -> 1049% -> 1678% -> 2684% -> 4295% -> 6250% (9 presses)
+  at maximum: zoom-in disabled, zoom-out enabled
+  zoom-in pressed at maximum (above the limit) -> label 6250%
+  slider set to 0 (minimum) -> label 100%
+  slider set to 1 (maximum) -> label 6250%
+
+## TC-BB-BVA-005 — layout breakpoints
+  width  699px -> gallery columns 3, hero title stacked (phone/tablet), sideways overflow 0px
+  width  700px -> gallery columns 5, hero title stacked (phone/tablet), sideways overflow 0px
+  width  701px -> gallery columns 5, hero title stacked (phone/tablet), sideways overflow 0px
+  width  899px -> gallery columns 5, hero title stacked (phone/tablet), sideways overflow 0px
+  width  900px -> gallery columns 5, hero title split around photo (desktop), sideways overflow 0px
+  width  901px -> gallery columns 5, hero title split around photo (desktop), sideways overflow 0px
+  width 1199px -> gallery columns 5, hero title split around photo (desktop), sideways overflow 0px
+  width 1200px -> gallery columns 7, hero title split around photo (desktop), sideways overflow 0px
+  width 1201px -> gallery columns 7, hero title split around photo (desktop), sideways overflow 0px
+

@@ -1,0 +1,73 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.2.0, pluggy-1.7.0 -- C:\Dev\Web Dev\Web Dev\Bonnie\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Dev\Web Dev\Web Dev\Bonnie
+configfile: pytest.ini
+testpaths: tests
+plugins: platformdirs-4.14.5, cov-7.1.0
+collecting ... collected 50 items
+
+tests/test_bonnie.py::test_UT_001_average_color_of_a_solid_image_is_that_colour PASSED [  2%]
+tests/test_bonnie.py::test_UT_002_average_color_blends_all_pixels PASSED [  4%]
+tests/test_bonnie.py::test_UT_003_color_distance_is_zero_for_identical_colours PASSED [  6%]
+tests/test_bonnie.py::test_UT_004_color_distance_is_the_squared_rgb_distance PASSED [  8%]
+tests/test_bonnie.py::test_UT_005_color_distance_is_symmetric PASSED     [ 10%]
+tests/test_bonnie.py::test_UT_006_score_of_an_unused_tile_is_just_the_colour_distance PASSED [ 12%]
+tests/test_bonnie.py::test_UT_007_score_adds_the_repeat_penalty_for_every_earlier_use PASSED [ 14%]
+tests/test_bonnie.py::test_UT_008_score_adds_the_cooldown_penalty_when_last_used_nearby PASSED [ 16%]
+tests/test_bonnie.py::test_UT_009_no_cooldown_at_exactly_the_cooldown_distance PASSED [ 18%]
+tests/test_bonnie.py::test_UT_010_cooldown_uses_straight_line_distance_including_diagonals PASSED [ 20%]
+tests/test_bonnie.py::test_UT_011_pick_tile_chooses_the_closest_colour PASSED [ 22%]
+tests/test_bonnie.py::test_UT_012_pick_tile_breaks_ties_in_favour_of_the_earlier_tile PASSED [ 24%]
+tests/test_bonnie.py::test_UT_013_repeat_penalty_lets_a_close_second_win PASSED [ 26%]
+tests/test_bonnie.py::test_UT_014_repeat_penalty_does_not_beat_a_much_better_colour PASSED [ 28%]
+tests/test_bonnie.py::test_UT_015_cooldown_steers_away_from_a_tile_just_used_next_door PASSED [ 30%]
+tests/test_bonnie.py::test_UT_016_tiles_missing_from_the_usage_counts_count_as_unused PASSED [ 32%]
+tests/test_bonnie.py::test_UT_017_grid_size_keeps_the_photos_shape PASSED [ 34%]
+tests/test_bonnie.py::test_UT_018_build_grid_matches_each_cell_in_row_major_order PASSED [ 36%]
+tests/test_bonnie.py::test_UT_019_build_grid_avoids_repeating_a_tile_side_by_side PASSED [ 38%]
+tests/test_bonnie.py::test_UT_020_render_mosaic_places_each_tile_in_its_cell PASSED [ 40%]
+tests/test_bonnie.py::test_UT_021_render_mosaic_opens_each_tile_only_once PASSED [ 42%]
+tests/test_bonnie.py::test_UT_022_export_layout_writes_size_and_filenames_only PASSED [ 44%]
+tests/test_bonnie.py::test_UT_023_export_layout_refuses_a_grid_of_the_wrong_size PASSED [ 46%]
+tests/test_bonnie.py::test_UT_024_load_tile_colors_reads_only_jpg_files PASSED [ 48%]
+tests/test_bonnie.py::test_UT_025_main_builds_the_mosaic_and_a_matching_layout PASSED [ 50%]
+tests/test_make_favicon.py::test_UT_034_has_glyph_is_true_for_a_letter_the_font_contains PASSED [ 52%]
+tests/test_make_favicon.py::test_UT_035_has_glyph_is_false_for_a_character_the_font_lacks PASSED [ 54%]
+tests/test_make_favicon.py::test_UT_036_finds_the_font_subset_that_really_contains_B PASSED [ 56%]
+tests/test_make_favicon.py::test_UT_037_stops_with_a_clear_message_when_no_usable_font_exists PASSED [ 58%]
+tests/test_make_favicon.py::test_UT_038_icons_are_drawn_at_the_requested_size[16] PASSED [ 60%]
+tests/test_make_favicon.py::test_UT_038_icons_are_drawn_at_the_requested_size[48] PASSED [ 62%]
+tests/test_make_favicon.py::test_UT_038_icons_are_drawn_at_the_requested_size[180] PASSED [ 64%]
+tests/test_make_favicon.py::test_UT_038_icons_are_drawn_at_the_requested_size[512] PASSED [ 66%]
+tests/test_make_favicon.py::test_UT_039_rounded_icons_have_transparent_corners_square_ones_do_not PASSED [ 68%]
+tests/test_make_favicon.py::test_UT_040_icon_uses_the_site_colours PASSED [ 70%]
+tests/test_make_favicon.py::test_UT_041_main_writes_all_three_icon_files PASSED [ 72%]
+tests/test_make_web_assets.py::test_UT_026_each_tile_is_saved_as_a_real_webp_at_every_size PASSED [ 74%]
+tests/test_make_web_assets.py::test_UT_027_tile_contents_survive_resizing PASSED [ 76%]
+tests/test_make_web_assets.py::test_UT_028_tiles_with_transparency_or_palettes_are_converted_to_rgb PASSED [ 78%]
+tests/test_make_web_assets.py::test_UT_029_a_missing_tile_photo_fails_loudly PASSED [ 80%]
+tests/test_make_web_assets.py::test_UT_030_preview_is_900px_wide_and_keeps_the_mosaics_shape PASSED [ 82%]
+tests/test_make_web_assets.py::test_UT_031_portrait_fits_900x1600_and_small_photos_are_not_enlarged PASSED [ 84%]
+tests/test_make_web_assets.py::test_UT_032_colour_grid_has_one_pixel_per_mosaic_cell PASSED [ 86%]
+tests/test_make_web_assets.py::test_UT_033_main_builds_every_asset_from_the_project_folders PASSED [ 88%]
+tests/test_mosaic_data.py::test_UT_045_real_layout_has_one_entry_per_cell PASSED [ 90%]
+tests/test_mosaic_data.py::test_UT_046_every_photo_in_the_real_layout_has_all_three_web_sizes PASSED [ 92%]
+tests/test_rename_tiles.py::test_UT_042_every_file_is_renamed_to_a_numbered_tile_keeping_its_extension PASSED [ 94%]
+tests/test_rename_tiles.py::test_UT_043_no_photo_is_lost_and_the_new_paths_are_returned PASSED [ 96%]
+tests/test_rename_tiles.py::test_UT_044_running_on_a_folder_that_already_has_tile_names_loses_nothing PASSED [ 98%]
+tests/test_rename_tiles.py::test_UT_047_folders_inside_are_left_alone PASSED [100%]
+
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.10-final-0 _______________
+
+Name                 Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------
+bonnie.py               85      1     20      1    98%   150
+make_favicon.py         43      1      8      1    96%   87
+make_web_assets.py      41      1     10      1    96%   83
+rename_tiles.py         19      1      6      1    92%   42
+----------------------------------------------------------------
+TOTAL                  188      4     44      4    97%
+Coverage JSON written to file docs/testing/results/python-coverage.json
+============================= 50 passed in 1.95s ==============================

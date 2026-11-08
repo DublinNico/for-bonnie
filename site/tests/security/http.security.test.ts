@@ -107,19 +107,32 @@ describe("authentication, tokens and admin", () => {
 
 describe("secrets never reach the browser", () => {
   const nextDir = path.join(process.cwd(), ".next");
+  /** Every file under `dir`, recursively — here, everything a browser can download. */
   const clientFiles = (dir: string): string[] =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? clientFiles(path.join(dir, e.name)) : [path.join(dir, e.name)]));
 
-  it("ST-009 no secret (from .env.local or the environment) appears in any file the browser can download", () => {
+  /** Values from a .env file, read the way Next.js does: comments, `export`, spaces and quotes handled. */
+  const envFileValues = (file: string): string[] =>
+    fs
+      .readFileSync(file, "utf8")
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith("#") && line.includes("="))
+      .map((line) => {
+        const assignment = line.replace(/^export\s+/, "");
+        const value = assignment.slice(assignment.indexOf("=") + 1).trim();
+        const quoted = value.match(/^(['"`])([\s\S]*)\1$/);
+        return quoted ? quoted[2] : value.replace(/\s+#.*$/, ""); // unquoted values can end in a comment
+      });
+
+  it("ST-009 no secret (from .env.local or named in SECRET_ENV_VARS) appears in any file the browser can download", () => {
     const envFile = path.join(process.cwd(), ".env.local");
     // Read the secret values only to search for them — never print them
-    const fromFile = fs.existsSync(envFile)
-      ? fs.readFileSync(envFile, "utf8").split(/\r?\n/).map((line) => line.split("=").slice(1).join("=").replace(/^"|"$/g, ""))
-      : [];
-    // In CI, fake secrets are set as environment variables (see ci.yml) to prove the build never embeds them
-    const fromEnv = Object.entries(process.env)
-      .filter(([name]) => /TOKEN|SECRET|PASSWORD|API_KEY/i.test(name))
-      .map(([, value]) => value ?? "");
+    const fromFile = fs.existsSync(envFile) ? envFileValues(envFile) : [];
+    // CI sets fake secrets and lists their names in SECRET_ENV_VARS (see ci.yml); only those are checked
+    const fromEnv = (process.env.SECRET_ENV_VARS ?? "")
+      .split(",")
+      .map((name) => process.env[name.trim()] ?? "");
     const secrets = [...fromFile, ...fromEnv].filter((v) => v.length >= 16);
     const leaks = clientFiles(path.join(nextDir, "static")).filter((file) => {
       const text = fs.readFileSync(file, "latin1");

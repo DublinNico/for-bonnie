@@ -1,0 +1,44 @@
+
+Running 38 tests using 9 workers
+
+  ✓   4 [desktop-chrome] › e2e\journeys.spec.ts:49:3 › browsing › ET-003 unknown pages show a 404
+  ✓   2 [desktop-chrome] › e2e\journeys.spec.ts:55:3 › browsing › ET-004 there are no forms or logins to submit
+  ✓   8 [desktop-chrome] › e2e\journeys.spec.ts:84:3 › exploring the mosaic › ET-007 Ctrl + scroll zooms the mosaic, not the page
+  ✓   9 [desktop-chrome] › e2e\journeys.spec.ts:110:3 › exploring the mosaic › ET-009 dragging moves around the zoomed-in mosaic
+  -  12 [desktop-chrome] › e2e\phone.spec.ts:9:1 › ET-013 nothing on the page is wider than the phone screen
+  ✓   7 [desktop-chrome] › e2e\journeys.spec.ts:131:3 › the gallery and photo view › ET-010 sort by most used, open, browse with the keyboard, close with Esc
+  ✓   6 [desktop-chrome] › e2e\journeys.spec.ts:73:3 › exploring the mosaic › ET-006 tapping a square shows its photo, and opening it shows that photo full size
+  -  13 [desktop-chrome] › e2e\phone.spec.ts:19:1 › ET-014 the hero stacks the title above the portrait, both fully on screen
+  -  14 [desktop-chrome] › e2e\phone.spec.ts:31:1 › ET-015 the mosaic fills the screen, and a tapped square's card fits on it
+  -  15 [desktop-chrome] › e2e\phone.spec.ts:44:1 › ET-016 swiping still scrolls the page when zoomed out, and pans the mosaic when zoomed in
+  -  16 [desktop-chrome] › e2e\phone.spec.ts:53:1 › ET-017 the gallery shows three columns
+  -  17 [desktop-chrome] › e2e\phone.spec.ts:61:1 › ET-018 the polaroids sit in a row of three and a row of two, without overlapping
+  -  18 [desktop-chrome] › e2e\phone.spec.ts:84:1 › ET-019 the photo view uses the full width, with its buttons on screen
+  ✓   3 [desktop-chrome] › e2e\journeys.spec.ts:63:3 › exploring the mosaic › ET-005 zooming in loads the real photos and shrinks the mini-map box
+  ✓  19 [desktop-chrome] › e2e\smoke.spec.ts:4:1 › ET-001 home page loads with its title and no errors
+  ✓   1 [desktop-chrome] › e2e\journeys.spec.ts:36:3 › browsing › ET-002 the nav links take you to each section
+  ✓   5 [desktop-chrome] › e2e\journeys.spec.ts:97:3 › exploring the mosaic › ET-008 plain scrolling over the mosaic scrolls the page and shows the zoom hint
+  ✓  11 [desktop-chrome] › e2e\journeys.spec.ts:166:3 › the gallery and photo view › ET-012 downloading a photo saves the full-size image
+  ✓  22 [mobile-375] › e2e\journeys.spec.ts:49:3 › browsing › ET-003 unknown pages show a 404
+  ✓  20 [mobile-375] › e2e\journeys.spec.ts:55:3 › browsing › ET-004 there are no forms or logins to submit
+  -  25 [mobile-375] › e2e\journeys.spec.ts:97:3 › exploring the mosaic › ET-008 plain scrolling over the mosaic scrolls the page and shows the zoom hint
+  -  26 [mobile-375] › e2e\journeys.spec.ts:84:3 › exploring the mosaic › ET-007 Ctrl + scroll zooms the mosaic, not the page
+  ✓  10 [desktop-chrome] › e2e\journeys.spec.ts:151:3 › the gallery and photo view › ET-011 'Show in mosaic' highlights every place the photo is used, then Clear removes it
+  -  31 [mobile-375] › e2e\journeys.spec.ts:110:3 › exploring the mosaic › ET-009 dragging moves around the zoomed-in mosaic
+  ✓  30 [mobile-375] › e2e\phone.spec.ts:9:1 › ET-013 nothing on the page is wider than the phone screen
+  ✓  24 [mobile-375] › e2e\journeys.spec.ts:73:3 › exploring the mosaic › ET-006 tapping a square shows its photo, and opening it shows that photo full size
+  ✓  27 [mobile-375] › e2e\journeys.spec.ts:131:3 › the gallery and photo view › ET-010 sort by most used, open, browse with the keyboard, close with Esc
+  ✓  32 [mobile-375] › e2e\phone.spec.ts:31:1 › ET-015 the mosaic fills the screen, and a tapped square's card fits on it
+  ✓  35 [mobile-375] › e2e\phone.spec.ts:53:1 › ET-017 the gallery shows three columns
+  ✓  34 [mobile-375] › e2e\phone.spec.ts:19:1 › ET-014 the hero stacks the title above the portrait, both fully on screen
+  ✓  23 [mobile-375] › e2e\journeys.spec.ts:63:3 › exploring the mosaic › ET-005 zooming in loads the real photos and shrinks the mini-map box
+  ✓  29 [mobile-375] › e2e\journeys.spec.ts:166:3 › the gallery and photo view › ET-012 downloading a photo saves the full-size image
+  ✓  21 [mobile-375] › e2e\journeys.spec.ts:36:3 › browsing › ET-002 the nav links take you to each section
+  ✓  36 [mobile-375] › e2e\phone.spec.ts:61:1 › ET-018 the polaroids sit in a row of three and a row of two, without overlapping
+  ✓  28 [mobile-375] › e2e\journeys.spec.ts:151:3 › the gallery and photo view › ET-011 'Show in mosaic' highlights every place the photo is used, then Clear removes it
+  ✓  38 [mobile-375] › e2e\smoke.spec.ts:4:1 › ET-001 home page loads with its title and no errors
+  ✓  33 [mobile-375] › e2e\phone.spec.ts:44:1 › ET-016 swiping still scrolls the page when zoomed out, and pans the mosaic when zoomed in
+  ✓  37 [mobile-375] › e2e\phone.spec.ts:84:1 › ET-019 the photo view uses the full width, with its buttons on screen
+
+  10 skipped
+  28 passed
