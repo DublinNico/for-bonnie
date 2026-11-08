@@ -78,7 +78,7 @@ rename_tiles.py        one-off: rename photos to tile_001.jpg, tile_002.jpg, ...
 square_images/         the 325 original tile photos   (not in git)
 target_photo/          the portrait the mosaic recreates   (not in git)
 site/                  the website (Next.js 16) — see site/README.md
-docs/                  preview image (and design mockups)
+docs/                  preview image, screenshots, design mockups, testing docs, bug reports
 BUILD_GUIDE.md         how the mosaic is built, explained step by step
 TODO.md / PROGRESS.md  checklist and current status
 ```
@@ -116,6 +116,37 @@ python make_web_assets.py      # web images in site/public/
 | Load (Artillery) | `npm run test:perf` | page load, gallery burst, 60s soak and bad traffic against the local production build, with p95 limits |
 
 Coverage: `npm run test:coverage` in `site/`, or `python -m pytest --cov --cov-branch`.
+
+### Testing results
+
+From the full run on 2026-11-08 (raw output in [`docs/testing/results/`](docs/testing/results/)):
+
+| Suite | Result | Coverage |
+|-------|--------|----------|
+| Python | 50 passed | 100% of statements and branches in every function (97% per file; the misses are the `if __name__ == "__main__"` launch lines) |
+| Unit | 61 passed | 73.67% statements, 67.24% branches — the canvas drawing and pinch need a real browser, so they're covered end-to-end instead |
+| Integration | 21 passed, 1 known issue | — |
+| Security | 15 passed | — |
+| End-to-end | 28 passed (10 skipped by design: phone-only and desktop-only checks) | — |
+| Load | 4 / 4 scenarios within their p95 limits, 0 failed visitors | — |
+| Manual | 14 test cases executed: equivalence partitioning, boundary values, white-box | — |
+
+Testing found **seven real bugs**; six are fixed and covered by tests, one is a harmless local-only quirk that's documented and accepted:
+
+- the hero title blocked clicks on "Explore the mosaic" on desktop — **on the live site** (found by the end-to-end tests);
+- `rename_tiles.py` could overwrite a photo;
+- `bonnie.py`'s `main()` ignored changed settings;
+- no security headers, and the server advertised Next.js;
+- Next.js 16.3.1 had critical security advisories;
+- the CI type check failed on a clean machine;
+- *(accepted)* the local server answers 500 instead of 405 to write requests; the live site answers 405.
+
+Full write-up:
+
+- [Testing report](docs/testing/TestingReport.md) — test plan, black-box and white-box design, results, coverage, conclusions, requirements traceability
+- [Manual test cases](docs/testing/test-cases/) — TC-BB-EP, TC-BB-BVA and TC-WB, each with its recorded result
+- [Bug reports](docs/bugs/) — BUG-001 to BUG-007
+- [Testing checklist](docs/TESTING_TODO.md) — every test area with its IDs
 
 ## Checks and deployment
 
