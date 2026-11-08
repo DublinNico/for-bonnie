@@ -177,9 +177,10 @@ img {
   aspect-ratio: 900 / 1592;
   margin: -0.12em auto 0;
   font-size: clamp(84px, 37vw, 180px);
-  box-shadow: 0 24px 40px -18px rgba(43, 31, 23, 0.5);
-  border-radius: 2px;
   overflow: hidden;
+  /* An oval whose edge fades out softly into the page */
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 72%, transparent 100%);
 }
 
 .hero-panel img {
@@ -256,7 +257,6 @@ img {
     width: var(--pw);
     margin: 0;
     transform: translateX(-50%);
-    box-shadow: 0 30px 60px -20px rgba(43, 31, 23, 0.45);
   }
   .hero-title {
     position: absolute;
