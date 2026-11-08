@@ -175,13 +175,18 @@ describe("CORS and headers", () => {
     expect((await request(site).get("/mosaic.json")).headers["cache-control"]).toContain("max-age=0");
   });
 
-  it.fails("IT-021 [KNOWN ISSUE] the server doesn't advertise its framework (X-Powered-By)", async () => {
+  it("IT-021 the server doesn't advertise its framework (no X-Powered-By)", async () => {
     expect((await request(site).get("/")).headers["x-powered-by"]).toBeUndefined();
   });
 
-  it.fails("IT-022 [KNOWN ISSUE] standard security headers are sent", async () => {
-    const res = await request(site).get("/");
-    expect(res.headers["x-content-type-options"]).toBe("nosniff");
-    expect(res.headers["referrer-policy"]).toBeDefined();
+  it("IT-022 standard security headers are sent on the page, the data and the images", async () => {
+    for (const url of ["/", "/mosaic.json", "/tiles/sm/tile_001.webp", "/no-such-page"]) {
+      const headers = (await request(site).get(url)).headers;
+      expect(headers["x-content-type-options"], url).toBe("nosniff");
+      expect(headers["referrer-policy"], url).toBe("strict-origin-when-cross-origin");
+      expect(headers["x-frame-options"], url).toBe("DENY");
+      expect(headers["content-security-policy"], url).toBe("frame-ancestors 'none'");
+      expect(headers["permissions-policy"], url).toBe("camera=(), microphone=(), geolocation=()");
+    }
   });
 });
