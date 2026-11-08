@@ -17,6 +17,11 @@ npm run dev          # http://localhost:3000 — reloads as you edit
 | `npm run start` | serve the production build (`-p 3001 -H 0.0.0.0` to open it from a phone on the same Wi-Fi) |
 | `npm run lint` | ESLint |
 | `npx next typegen && npx tsc --noEmit` | TypeScript check (as CI runs it) |
+| `npm test` / `npm run test:watch` / `npm run test:coverage` | unit + component tests (Vitest, happy-dom) — `app/**/*.test.ts(x)` |
+| `npm run test:integration` | builds, then tests the production server over HTTP (Supertest) — `integration/` |
+| `npm run test:security` | builds, then injection / XSS / secrets / access checks — `tests/security/` |
+| `npm run test:e2e` | builds, then real-browser journeys on desktop + 375px phone (Playwright) — `e2e/` |
+| `npm run test:py` | the Python tests in the project root (activate the venv first) |
 
 Needs Node.js 20.9 or newer (CI and Vercel use 24).
 

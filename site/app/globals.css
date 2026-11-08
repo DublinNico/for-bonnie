@@ -264,6 +264,7 @@ img {
     z-index: 1;
     font-size: clamp(120px, 15.5vw, 300px);
     text-align: left;
+    pointer-events: none; /* it covers the whole hero: let clicks reach the links underneath */
   }
   .hero-title span {
     position: absolute;
