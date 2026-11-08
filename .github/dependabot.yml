@@ -20,6 +20,15 @@ updates:
       minor-and-patch:
         update-types: ["minor", "patch"]
     # Major updates aren't grouped: each gets its own PR, as they can break things
+    ignore:
+      # typescript-eslint (inside eslint-config-next) supports TypeScript < 6.1 only,
+      # so TypeScript 7 breaks linting (PR #13). Remove once typescript-eslint supports it.
+      - dependency-name: "typescript"
+        versions: [">= 7.0.0"]
+      # Type definitions for Node.js should match the Node version the site runs on:
+      # 24 locally, in CI and on Vercel. Raise this together with the Node version.
+      - dependency-name: "@types/node"
+        versions: [">= 25.0.0"]
 
   # The versions of the GitHub Actions used in .github/workflows/
   - package-ecosystem: github-actions
