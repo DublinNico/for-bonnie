@@ -63,14 +63,3 @@ retarget #2 to `main`, and so on.
     so the public site is live before the PRs are merged. Content is identical.
 - **CodeRabbit** reviews code; `.coderabbit.yaml` skips images and generated
   files (the free plan's limit is 100 files per PR).
-
-## Teaching format
-See `TEACHING.md` for the full curriculum/rules. Key recalibration during
-this build: for libraries the student has never touched (e.g. `pathlib`),
-give a complete small worked example up front rather than a list of
-methods to assemble from scratch, and explain code in plain conversational
-language rather than glossary-style definitions.
-
-When building with Claude, the student wants to watch the work happen: each
-file opened in VS Code before it's changed, a plain-language explanation of
-the change, then the diff — and to be asked before anything is pushed.

@@ -9,7 +9,7 @@
 ## Tutorial
  - [ ] Create a comprehensive tutorial for the website build. 
 
-## Pillow fundamentals (learning exercises — see TEACHING.md)
+## Pillow fundamentals (learning exercises)
 - [ ] Pillow fundamentals, applied directly to real tiles/target (not throwaway drills):
   - [ ] Open an image; inspect `.size`, `.mode`, `.format`
   - [ ] Resize + save; compare `LANCZOS` vs `NEAREST`
