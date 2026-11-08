@@ -1,0 +1,92 @@
+
+ RUN  v5.1.0 C:/Dev/Web Dev/Web Dev/Bonnie/site
+      Coverage enabled with v8
+
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-020 reads the grid size and turns filenames into photo numbers
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-021 lists every photo in number order with its number
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-022 counts how many squares use each photo
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-023 keeps photos the mosaic never used, with 0 uses (the gallery still shows them)
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-024 ignores files in the tile folder that aren't WebP images
+ ✓ app/lib/load-mosaic.test.ts > loadMosaic > FT-025 stops the build with a helpful message if a photo has no web image
+ ✓ app/lib/types.test.ts > photo helpers > FT-001 labels photos with a 3-digit number
+ ✓ app/lib/types.test.ts > photo helpers > FT-002 builds image URLs for each size
+ ✓ app/lib/view.test.ts > zoom limits > FT-003 fully zoomed out, the whole mosaic fits with a small margin
+ ✓ app/lib/view.test.ts > zoom limits > FT-004 a tall mosaic is limited by the screen height
+ ✓ app/lib/view.test.ts > zoom limits > FT-005 zoom is kept between fully zoomed out and the maximum
+ ✓ app/lib/view.test.ts > clampView > FT-006 centres the mosaic when it fits on screen
+ ✓ app/lib/view.test.ts > clampView > FT-007 stops the mosaic being dragged past its edges when zoomed in
+ ✓ app/lib/view.test.ts > clampView > FT-008 enforces the zoom limits
+ ✓ app/lib/view.test.ts > zooming and pinching > FT-009 zooming keeps the spot under the cursor still
+ ✓ app/lib/view.test.ts > zooming and pinching > FT-010 zooming stops at the limits
+ ✓ app/lib/view.test.ts > zooming and pinching > FT-011 spreading two fingers zooms in, and the spot between them follows the fingers
+ ✓ app/lib/view.test.ts > cellAt — which square is under a tap > FT-012 finds the square under a point as row * cols + col
+ ✓ app/lib/view.test.ts > cellAt — which square is under a tap > FT-013 returns null for points outside the mosaic
+ ✓ app/lib/view.test.ts > cellAt — which square is under a tap > FT-014 the far edge belongs outside the mosaic
+ ✓ app/lib/view.test.ts > drawing decisions > FT-015 only the squares on screen are drawn
+ ✓ app/lib/view.test.ts > drawing decisions > FT-016 picks the image size from how big a square is on screen
+ ✓ app/lib/view.test.ts > zoom controls > FT-017 the zoom label is 100% when fully zoomed out
+ ✓ app/lib/view.test.ts > zoom controls > FT-018 the zoom slider runs from 0 (zoomed out) to 1 (max) and converts back exactly
+ ✓ app/lib/view.test.ts > zoom controls > FT-019 the mini-map box shows which part of the mosaic is on screen
+ ✓ app/components/StaticSections.test.tsx > static sections > FT-059 hero: the name, the portrait of Bonnie, the photo count and the page links
+ ✓ app/components/StaticSections.test.tsx > static sections > FT-060 how it was made: the grid size, photo count and three steps in order
+ ✓ app/components/StaticSections.test.tsx > static sections > FT-061 dedication: the words, five polaroids and the photo count
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-033 shows the photo full size, its name and where it is in the list
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-034 says how often the photo is used: N times, once, or not used
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-035 a photo the mosaic never used says so, and has no 'Show in mosaic' button
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-036 'Show in mosaic' passes on which photo to highlight
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-042 the mosaic has a description for screen readers and is keyboard-focusable
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-043 starts fully zoomed out: 100%, with zoom-out disabled
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-026 starts in photo-number order, showing every photo
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-027 'Most used' puts the most-used photos first
+ ✓ app/components/MosaicExperience.test.tsx > MosaicExperience (app state) > FT-054 lays out the explorer, then the in-between section, then the gallery
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-044 the + and − buttons zoom in and back out
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-045 zoom stops at the maximum, and + is then disabled
+ ✓ app/components/MosaicExperience.test.tsx > MosaicExperience (app state) > FT-055 clicking a gallery photo opens it in the viewer, and Close shuts it
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-028 'Least used' puts unused photos first, breaking ties by number
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-029 the chosen sort button is marked as pressed, and 'In order' goes back
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-030 captions show how often a photo is used, or that it isn't
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-037 previous/next buttons move through the list, and hide at either end
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-031 clicking a photo opens it, passing the current order for next/previous
+ ✓ app/components/Gallery.test.tsx > Gallery > FT-032 photos load the 400px image, lazily
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-046 the zoom slider goes from fully zoomed out to the maximum
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-038 arrow keys move between photos and Escape closes; nothing happens past the ends
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-039 the page behind can't scroll while open, and scrolls again after
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-040 keyboard focus moves to Close, then back to where it was
+ ✓ app/components/Lightbox.test.tsx > Lightbox (full-size photo view) > FT-041 shows a dot for each place it appears, and links to the full-size download
+ ✓ app/components/MosaicExperience.test.tsx > MosaicExperience (app state) > FT-056 'next' in the viewer follows the gallery's current sort order
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-047 keyboard: + zooms in, − zooms out, 0 resets
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-048 tapping a square shows which photo it is, and the arrow opens it
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-049 tapping the same square again, or ×, closes the card
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-050 tapping outside the mosaic, or dragging, doesn't open a card
+ ✓ app/components/MosaicExperience.test.tsx > MosaicExperience (app state) > FT-057 'Show in mosaic' closes the viewer, scrolls up and highlights that photo; Clear removes it
+ ✓ app/components/MosaicExperience.test.tsx > MosaicExperience (app state) > FT-058 opening a photo from the mosaic browses all photos in number order
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-051 Ctrl + scroll zooms; plain scrolling shows a hint instead
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-052 'Show in mosaic' shows how many places the photo is used, with a Clear button
+ ✓ app/components/MosaicExplorer.test.tsx > MosaicExplorer > FT-053 highlighting a photo closes any open square's card
+
+ Test Files  8 passed (8)
+      Tests  61 passed (61)
+   Start at  18:27:37
+   Duration  1.43s (environment 40%, setup 28%, tests 24%, import 4%, worker 2%, transform 1%)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   73.67 |    67.24 |   83.96 |   75.63 |                   
+ app               |       0 |      100 |       0 |       0 |                   
+  layout.tsx       |       0 |      100 |       0 |       0 | 5-28              
+  page.tsx         |       0 |      100 |       0 |       0 | 8-11              
+ app/components    |   71.51 |    63.87 |   81.92 |      74 |                   
+  Lightbox.tsx     |   97.43 |    96.42 |     100 |     100 | 49                
+  ...cExplorer.tsx |   63.17 |    53.78 |   68.08 |   65.93 | ...59-362,378-383 
+ app/lib           |     100 |    94.73 |     100 |     100 |                   
+  load-mosaic.ts   |     100 |       80 |     100 |     100 | 40                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 73.67% ( 291/395 )
+Branches     : 67.24% ( 117/174 )
+Functions    : 83.96% ( 89/106 )
+Lines        : 75.63% ( 267/353 )
+================================================================================
