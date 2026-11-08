@@ -16,7 +16,7 @@
     "test:security": "next build && vitest run -c vitest.security.config.mts"
   },
   "dependencies": {
-    "next": "16.3.1",
+    "next": "16.4.5",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -34,7 +34,7 @@
     "@vitejs/plugin-react": "^6.2.1",
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^9",
-    "eslint-config-next": "16.3.1",
+    "eslint-config-next": "16.4.5",
     "happy-dom": "^21.0.4",
     "supertest": "^7.3.2",
     "tailwindcss": "^4",
