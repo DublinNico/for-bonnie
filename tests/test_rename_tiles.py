@@ -1,7 +1,5 @@
 """Unit tests for rename_tiles.py. Uses throwaway folders — never the real photos."""
 
-import pytest
-
 from rename_tiles import rename_tiles
 
 
@@ -33,15 +31,21 @@ def test_UT_043_no_photo_is_lost_and_the_new_paths_are_returned(tmp_path):
     assert sorted(p.read_text() for p in renamed) == ["a.jpg", "b.jpg"]  # both photos still there
 
 
-@pytest.mark.xfail(
-    reason="KNOWN ISSUE: renaming in place collides with an existing tile_NNN name "
-    "(crashes on Windows, silently overwrites a photo on macOS/Linux)",
-    strict=False,
-)
 def test_UT_044_running_on_a_folder_that_already_has_tile_names_loses_nothing(tmp_path):
-    make_files(tmp_path, ["a_new_photo.jpg", "tile_001.jpg"])
+    # Used to crash on Windows / overwrite a photo elsewhere: a new name landed on tile_001.jpg
+    make_files(tmp_path, ["a_new_photo.jpg", "tile_001.jpg", "tile_002.jpg", "zzz.jpg"])
 
     rename_tiles(tmp_path)
 
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["tile_001.jpg", "tile_002.jpg", "tile_003.jpg", "tile_004.jpg"]
     contents = sorted(p.read_text() for p in tmp_path.iterdir())
-    assert contents == ["a_new_photo.jpg", "tile_001.jpg"]  # both photos survive
+    assert contents == ["a_new_photo.jpg", "tile_001.jpg", "tile_002.jpg", "zzz.jpg"]  # every photo survives
+
+
+def test_UT_047_folders_inside_are_left_alone(tmp_path):
+    make_files(tmp_path, ["a.jpg"])
+    (tmp_path / "backup").mkdir()
+
+    rename_tiles(tmp_path)
+
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["backup", "tile_001.jpg"]
