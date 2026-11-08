@@ -1,8 +1,13 @@
 venv/
 __pycache__/
 .pytest_cache/
+.coverage
+htmlcov/
 *.pyc
 .env
+
+# Personal Claude Code settings (permissions on this PC)
+.claude/settings.local.json
 
 images/
 images_2_square/
