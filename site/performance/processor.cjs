@@ -1,10 +1,12 @@
 // Helpers for the Artillery scenarios: pick random photos for each simulated visitor.
-// Photos are numbered tile_001 ... tile_NNN with no gaps (rename_tiles.py guarantees it);
-// run.mjs passes the real count in PERF_TILE_COUNT.
+// run.mjs reads the target server's own /mosaic.json and passes its photo names in
+// PERF_PHOTOS, so only photos that server really has are requested.
 
-function randomPhotos(how_many) {
-  const count = Number(process.env.PERF_TILE_COUNT || 325);
-  return Array.from({ length: how_many }, () => `tile_${String(1 + Math.floor(Math.random() * count)).padStart(3, "0")}`);
+/** `howMany` random photo names (e.g. "tile_042") from the target's photo list. */
+function randomPhotos(howMany) {
+  const names = (process.env.PERF_PHOTOS || "").split(",").filter(Boolean);
+  if (names.length === 0) throw new Error("PERF_PHOTOS is empty: run the load tests through performance/run.mjs");
+  return Array.from({ length: howMany }, () => names[Math.floor(Math.random() * names.length)]);
 }
 
 module.exports = {
