@@ -33,9 +33,10 @@ export default defineConfig({
   ],
 
   // Build the site and serve the production version, as the Next.js docs recommend.
+  // In CI the workflow has already built it, so just serve it.
   // Locally, an already-running server on this port is reused to save time.
   webServer: {
-    command: `npm run build && npm run start -- -p ${PORT}`,
+    command: process.env.CI ? `npm run start -- -p ${PORT}` : `npm run build && npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
