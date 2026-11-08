@@ -110,12 +110,17 @@ describe("secrets never reach the browser", () => {
   const clientFiles = (dir: string): string[] =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? clientFiles(path.join(dir, e.name)) : [path.join(dir, e.name)]));
 
-  it("ST-009 no value from .env.local appears in any file the browser can download", () => {
+  it("ST-009 no secret (from .env.local or the environment) appears in any file the browser can download", () => {
     const envFile = path.join(process.cwd(), ".env.local");
     // Read the secret values only to search for them — never print them
-    const secrets = fs.existsSync(envFile)
-      ? fs.readFileSync(envFile, "utf8").split(/\r?\n/).map((line) => line.split("=").slice(1).join("=").replace(/^"|"$/g, "")).filter((v) => v.length >= 16)
+    const fromFile = fs.existsSync(envFile)
+      ? fs.readFileSync(envFile, "utf8").split(/\r?\n/).map((line) => line.split("=").slice(1).join("=").replace(/^"|"$/g, ""))
       : [];
+    // In CI, fake secrets are set as environment variables (see ci.yml) to prove the build never embeds them
+    const fromEnv = Object.entries(process.env)
+      .filter(([name]) => /TOKEN|SECRET|PASSWORD|API_KEY/i.test(name))
+      .map(([, value]) => value ?? "");
+    const secrets = [...fromFile, ...fromEnv].filter((v) => v.length >= 16);
     const leaks = clientFiles(path.join(nextDir, "static")).filter((file) => {
       const text = fs.readFileSync(file, "latin1");
       return text.includes("VERCEL_OIDC_TOKEN") || secrets.some((secret) => text.includes(secret));
