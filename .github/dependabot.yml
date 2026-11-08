@@ -1,0 +1,46 @@
+# Dependabot: opens pull requests to keep dependencies up to date.
+# CI runs on every one of them, so a green PR is safe to merge.
+# Docs: https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+version: 2
+updates:
+  # The website's npm packages
+  - package-ecosystem: npm
+    directory: /site
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      # Next.js and its lint config must always match, so they move together
+      nextjs:
+        patterns: ["next", "eslint-config-next"]
+      # Everything else that's a minor or patch update: one PR a week
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    # Major updates aren't grouped: each gets its own PR, as they can break things
+
+  # The versions of the GitHub Actions used in .github/workflows/
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # The Python packages for the mosaic scripts and their tests (requirements-dev.txt)
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "deps(python)"
+    groups:
+      python:
+        patterns: ["*"]

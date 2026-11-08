@@ -22,6 +22,7 @@ npm run dev          # http://localhost:3000 — reloads as you edit
 | `npm run test:security` | builds, then injection / XSS / secrets / access checks — `tests/security/` |
 | `npm run test:e2e` | builds, then real-browser journeys on desktop + 375px phone (Playwright) — `e2e/` |
 | `npm run test:py` | the Python tests in the project root (activate the venv first) |
+| `npm run test:perf` | builds, then the Artillery load tests on port 3300 — `performance/` (one at a time: `test:perf:page`, `:gallery`, `:soak`, `:bad`, after `npm run build`) |
 
 Needs Node.js 20.9 or newer (CI and Vercel use 24).
 
