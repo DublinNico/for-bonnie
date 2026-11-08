@@ -1,23 +1,30 @@
 # Continuous integration: checks the project on every pull request and on main.
-# A red X on a PR means one of these steps failed — click "Details" to see which.
+# Three jobs run side by side; a red X on a PR means one of them failed — click "Details".
 name: CI
 
 on:
-  # Every PR, whatever branch it targets (so stacked PRs are checked too)
-  pull_request:
-  # Every push to main (i.e. after a merge)
+  pull_request: # every PR, whatever branch it targets
   push:
-    branches: [main]
+    branches: [main] # and after every merge
 
 # If you push again while a run is still going, cancel the old run
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# FAKE, test-only values — never real secrets. The site needs no secrets at all; these
+# exist so the security test ST-009 can prove the build never copies environment
+# secrets into files that browsers download.
+env:
+  VERCEL_OIDC_TOKEN: fake-test-token-not-a-real-secret-0001
+  FAKE_TEST_API_KEY: fake-test-api-key-not-a-real-secret-0002
+
 jobs:
-  # ---------------------------------------------------------------- Python
-  python:
-    name: Python tests (mosaic pipeline)
+  # ------------------------------------------------------------------------ backend
+  # The "backend": the Python pipeline that makes the data, and the server-side
+  # behaviour of the built site (integration + security tests over HTTP).
+  backend:
+    name: Backend — Python tests with coverage, server tests, audits
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
@@ -30,22 +37,59 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
-      - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+      - name: Install Python dependencies
+        run: pip install -r requirements-dev.txt pip-audit
 
-      # The favicon tests need fonts from a site build, so they skip here (with a reason);
-      # everything else runs, with branch coverage
-      - name: Unit tests (pytest)
-        run: python -m pytest --cov=bonnie --cov=make_web_assets --cov=make_favicon --cov=rename_tiles --cov-branch -rs
+      # The favicon tests need fonts from a site build, so they skip here (with a reason)
+      - name: Python tests with branch coverage
+        run: python -m pytest -rs --cov=bonnie --cov=make_web_assets --cov=make_favicon --cov=rename_tiles --cov-branch --cov-report=term-missing --cov-report=xml
 
-  # ---------------------------------------------------------------- Website
-  website:
-    name: Website — lint, types, unit, build, integration, security, end-to-end
+      - name: Audit Python dependencies (pip-audit)
+        run: pip-audit -r requirements-dev.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install site dependencies (exactly as locked)
+        working-directory: site
+        run: npm ci
+
+      # Production dependencies only: what actually runs the site
+      - name: Audit production npm dependencies
+        working-directory: site
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Production build
+        working-directory: site
+        run: npm run build
+
+      - name: Integration tests (Supertest, over HTTP)
+        working-directory: site
+        run: npx vitest run -c vitest.integration.config.mts
+
+      - name: Security tests
+        working-directory: site
+        run: npx vitest run -c vitest.security.config.mts
+
+      - name: Keep the Python coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backend-coverage
+          path: coverage.xml
+          retention-days: 7
+
+  # ------------------------------------------------------------------------ frontend
+  frontend:
+    name: Frontend — lint, type check, unit tests with coverage, audit
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: site
-
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -68,32 +112,60 @@ jobs:
       - name: Generate Next.js route types
         run: npx next typegen
 
-      - name: Type-check (TypeScript)
+      - name: Type check (TypeScript)
         run: npx tsc --noEmit
 
-      - name: Unit tests (Vitest)
-        run: npm test
+      - name: Unit tests with coverage (Vitest)
+        run: npm run test:coverage
 
-      - name: Production build (same as Vercel runs)
+      # All dependencies, including dev tools; fails on high or critical advisories
+      - name: Audit all npm dependencies
+        run: npm audit --audit-level=high
+
+      - name: Keep the coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage
+          path: site/coverage/
+          retention-days: 7
+
+  # ------------------------------------------------------------------------ e2e
+  e2e:
+    name: End-to-end — Playwright, desktop + 375px phone
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install dependencies (exactly as locked)
+        run: npm ci
+
+      - name: Production build
         run: npm run build
-
-      # These two reuse the build above
-      - name: Integration tests (Supertest)
-        run: npx vitest run -c vitest.integration.config.mts
-
-      - name: Security tests
-        run: npx vitest run -c vitest.security.config.mts
 
       - name: Install Playwright's browser
         run: npx playwright install --with-deps chromium
 
-      - name: End-to-end tests (Playwright, desktop + 375px phone)
+      - name: End-to-end tests
         run: npm run test:e2e
 
-      - name: Keep the end-to-end report if something failed
+      - name: Keep the results if something failed
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
-          path: site/playwright-report/
+          name: playwright-results
+          path: |
+            site/playwright-report/
+            site/test-results/
           retention-days: 7

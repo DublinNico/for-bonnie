@@ -113,12 +113,13 @@ python make_web_assets.py      # web images in site/public/
 | Integration (IT-###) | `npm run test:integration` | the production build over HTTP: every URL, bad requests, private files, headers, CORS |
 | Security (ST-###) | `npm run test:security` | injection, XSS, no login/tokens/admin, no secrets in browser files |
 | End-to-end (ET-###) | `npm run test:e2e` | real-browser journeys on desktop and a 375px phone |
+| Load (Artillery) | `npm run test:perf` | page load, gallery burst, 60s soak and bad traffic against the local production build, with p95 limits |
 
 Coverage: `npm run test:coverage` in `site/`, or `python -m pytest --cov --cov-branch`.
 
 ## Checks and deployment
 
-Every pull request runs **CI** (GitHub Actions, `.github/workflows/ci.yml`): the Python tests, plus ESLint, a TypeScript check, the unit tests, a production build, and the integration, security and end-to-end tests on that build. **Vercel** builds a preview of each PR, and deploys the live site whenever something is merged into `main`. **CodeRabbit** reviews the code (images and generated files are skipped — see `.coderabbit.yaml`).
+Every pull request runs **CI** (GitHub Actions, `.github/workflows/ci.yml`) in three jobs: **backend** (Python tests with coverage, `pip-audit`, a production `npm audit`, and the integration and security tests), **frontend** (lint, type check, unit tests with coverage, `npm audit`) and **e2e** (Playwright; results are uploaded if it fails). **Dependabot** (`.github/dependabot.yml`) opens weekly update PRs for npm, Python and the CI actions. **Vercel** builds a preview of each PR, and deploys the live site whenever something is merged into `main`. **CodeRabbit** reviews the code (images and generated files are skipped — see `.coderabbit.yaml`).
 
 The site sends standard security headers (see `site/next.config.ts`) and runs Next.js 16.4.5.
 

@@ -1,0 +1,44 @@
+# BAD TRAFFIC — what bots and attackers send (the site accepts no POSTs).
+# 50 visitors over 10 seconds send requests that must all be refused:
+# a POST to the page, a fake login, an unknown page and a path-traversal attempt.
+# Refusing them must stay fast and must never take the server down.
+# Pass: 95% of responses in under 2000 ms, each refused with the expected status.
+config:
+  target: http://localhost:3300 # the runner overrides this with --target
+  phases:
+    - name: 50 bad visitors over 10s
+      duration: 10
+      arrivalCount: 50
+  plugins:
+    expect:
+      reportFailuresAsErrors: true
+    ensure:
+      thresholds:
+        - http.response_time.p95: 2000
+
+scenarios:
+  - name: Refused requests
+    flow:
+      - post:
+          url: /
+          json: { message: "spam" }
+          expect:
+            - statusCode: 405
+      - post:
+          url: /api/login
+          json: { username: admin, password: guess }
+          expect:
+            - statusCode: 404
+      - get:
+          url: /wp-admin
+          expect:
+            - statusCode: 404
+      - get:
+          url: "/tiles/sm/..%2f..%2fpackage.json"
+          expect:
+            - statusCode: 404
+      # Still healthy afterwards
+      - get:
+          url: /mosaic.json
+          expect:
+            - statusCode: 200
