@@ -48,8 +48,17 @@
   - [x] Mobile layout
 - [x] Favicon (`make_favicon.py`) — PR #5
 
+## Testing and security
+- [x] Test setup: Vitest + Testing Library + happy-dom, Playwright, pytest, Supertest
+- [x] Unit tests: 47 Python (UT-001..047), 61 frontend (FT-001..061)
+- [x] Integration tests over HTTP (IT-001..022) and security tests (ST-001..015)
+- [x] End-to-end journeys on desktop + 375px phone (ET-001..019)
+- [x] Fixed bugs the tests found: hero title blocked the "Explore the mosaic" link on desktop;
+  `rename_tiles.py` could overwrite photos
+- [x] Security headers, no `X-Powered-By`; Next.js 16.3.1 -> 16.4.5 (critical advisories)
+
 ## Checks and deployment
-- [x] CI: GitHub Actions lint + type-check + build on every PR — PR #4
+- [x] CI: GitHub Actions runs every test suite (Python + website) on every PR
 - [x] CodeRabbit config (skip images, review stacked PRs) — in PR #3
 - [x] Vercel project `nicoletti-dev/for-bonnie` connected to GitHub (root `site`, Node 24)
 - [ ] Merge the stacked PRs in order (#1 → #2 → #3 → #4 → #5 → docs) so `main` holds the site

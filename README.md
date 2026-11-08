@@ -104,9 +104,23 @@ python bonnie.py               # mosaic + site/public/mosaic.json
 python make_web_assets.py      # web images in site/public/
 ```
 
+## Tests
+
+| Suite | Command | What it covers |
+|-------|---------|----------------|
+| Python (UT-###) | `python -m pytest` (from the project root, venv active) | the mosaic matching logic, web image generation, favicon, renaming, and the real data files |
+| Unit (FT-###) | `npm test` in `site/` | explorer maths, data loader, every component, app state |
+| Integration (IT-###) | `npm run test:integration` | the production build over HTTP: every URL, bad requests, private files, headers, CORS |
+| Security (ST-###) | `npm run test:security` | injection, XSS, no login/tokens/admin, no secrets in browser files |
+| End-to-end (ET-###) | `npm run test:e2e` | real-browser journeys on desktop and a 375px phone |
+
+Coverage: `npm run test:coverage` in `site/`, or `python -m pytest --cov --cov-branch`.
+
 ## Checks and deployment
 
-Every pull request runs **CI** (GitHub Actions, `.github/workflows/ci.yml`): ESLint, a TypeScript check and a production build of `site/`. **Vercel** builds a preview of each PR, and deploys the live site whenever something is merged into `main`. **CodeRabbit** reviews the code (images and generated files are skipped — see `.coderabbit.yaml`).
+Every pull request runs **CI** (GitHub Actions, `.github/workflows/ci.yml`): the Python tests, plus ESLint, a TypeScript check, the unit tests, a production build, and the integration, security and end-to-end tests on that build. **Vercel** builds a preview of each PR, and deploys the live site whenever something is merged into `main`. **CodeRabbit** reviews the code (images and generated files are skipped — see `.coderabbit.yaml`).
+
+The site sends standard security headers (see `site/next.config.ts`) and runs Next.js 16.4.5.
 
 ## License
 
