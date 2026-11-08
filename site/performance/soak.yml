@@ -1,0 +1,37 @@
+# SOAK — the "slow" test (the site has no login).
+# A steady 5 new visitors every second for a full minute (300 visitors), each
+# loading the page, the data and 10 small mosaic photos as if zooming in.
+# Checks nothing gradually slows down or starts failing under sustained traffic.
+# Pass: 95% of responses in under 1000 ms, every response the right status.
+config:
+  target: http://localhost:3300 # the runner overrides this with --target
+  processor: ./processor.cjs
+  phases:
+    - name: steady traffic for 60s
+      duration: 60
+      arrivalRate: 5
+  plugins:
+    expect:
+      reportFailuresAsErrors: true
+    ensure:
+      thresholds:
+        - http.response_time.p95: 1000
+
+scenarios:
+  - name: Visit and zoom in
+    flow:
+      - get:
+          url: /
+          expect:
+            - statusCode: 200
+      - get:
+          url: /mosaic.json
+          expect:
+            - statusCode: 200
+      - function: pickMosaicPhotos # sets {{ photos }} to 10 random photo names
+      - loop:
+          - get:
+              url: "/tiles/xs/{{ $loopElement }}.webp"
+              expect:
+                - statusCode: 200
+        over: photos

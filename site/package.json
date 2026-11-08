@@ -13,7 +13,12 @@
     "test:e2e": "playwright test",
     "test:py": "cd .. && python -m pytest",
     "test:integration": "next build && vitest run -c vitest.integration.config.mts",
-    "test:security": "next build && vitest run -c vitest.security.config.mts"
+    "test:security": "next build && vitest run -c vitest.security.config.mts",
+    "test:perf": "next build && node performance/run.mjs",
+    "test:perf:page": "node performance/run.mjs page-load",
+    "test:perf:gallery": "node performance/run.mjs gallery",
+    "test:perf:soak": "node performance/run.mjs soak",
+    "test:perf:bad": "node performance/run.mjs bad-traffic"
   },
   "dependencies": {
     "next": "16.4.5",
