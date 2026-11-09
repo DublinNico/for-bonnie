@@ -16,7 +16,7 @@ Every figure in this report comes from the raw output saved in [`results/`](resu
 
 ### 1.1 What the site does
 
-The site is a memorial for Bonnie, a dog who lived for eleven years. Its centrepiece is a **photomosaic**: a portrait of Bonnie rebuilt from 7,475 small squares (65 × 115), each filled with one of 325 photos of her, chosen by colour. Visitors can zoom from the whole portrait down to the individual photos, find out which photo any square is, browse every photo in a gallery, open each one full size, and see every place a photo appears in the mosaic.
+The site is a memorial for Bonnie, a beloved dog who lived for eleven years. Its centrepiece is a **photomosaic**: a portrait of Bonnie rebuilt from 7,475 small squares (65 × 115), each filled with one of 325 photos of her, chosen by colour. Visitors can zoom from the whole portrait down to the individual photos, find out which photo any square is, browse every photo in a gallery, open each one full size, and see every place a photo appears in the mosaic.
 
 ### 1.2 Stack
 
