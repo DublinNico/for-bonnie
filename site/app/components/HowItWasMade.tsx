@@ -11,7 +11,7 @@ export default function HowItWasMade({ cols, rows, photoCount }: { cols: number;
           photos matched its colour best — never letting the same one sit too close to itself.
         </p>
         <p className="note">
-          {cols} × {rows} squares · {photoCount} photos
+          {cols} × {rows} · {(cols * rows).toLocaleString()} squares · {photoCount} photos
         </p>
       </div>
 

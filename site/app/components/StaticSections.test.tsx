@@ -19,7 +19,7 @@ describe("static sections", () => {
   it("FT-060 how it was made: the grid size, photo count and three steps in order", () => {
     render(<HowItWasMade cols={65} rows={115} photoCount={325} />);
 
-    expect(screen.getByText("65 × 115 squares · 325 photos")).toBeInTheDocument();
+    expect(screen.getByText("65 × 115 · 7,475 squares · 325 photos")).toBeInTheDocument();
     const steps = screen.getAllByRole("listitem").map((li) => li.querySelector("h3")?.textContent);
     expect(steps).toEqual(["The portrait", "The grid", "The mosaic"]);
     expect(screen.getByRole("img", { name: /one colour per square/ })).toHaveAttribute("src", "/grid.png");
