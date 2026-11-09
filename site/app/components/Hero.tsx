@@ -23,7 +23,7 @@ export default function Hero({ photoCount }: { photoCount: number }) {
       <div className="hero-panel">
         {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized static asset */}
         <img
-          src="/portrait.webp"
+          src="/hero-portrait.webp"
           alt="Bonnie sitting on a path in her harness, looking at the camera"
           fetchPriority="high"
         />

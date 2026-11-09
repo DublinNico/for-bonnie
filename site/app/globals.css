@@ -179,8 +179,8 @@ img {
   font-size: clamp(84px, 37vw, 180px);
   overflow: hidden;
   /* An oval whose edge fades out softly into the page */
-  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 72%, transparent 100%);
-  mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 72%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 96%, transparent 100%);
+  mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 96%, transparent 100%);
 }
 
 .hero-panel img {
@@ -270,12 +270,14 @@ img {
     position: absolute;
     top: calc(104px + var(--ph) * 0.2);
   }
-  /* Each word sits a clear gap away from the mosaic's edge */
+  /* Each word sits a clear gap away from the portrait's edge. The letters' own side
+     spacing differs ("Bon" inks closer to its edge than "nie"), so each word is nudged
+     by half that difference (in em, so it scales with the text) to make the gaps even */
   .hero-title .bon {
-    right: calc(50% + var(--pw) / 2 + var(--title-gap));
+    right: calc(50% + var(--pw) / 2 + var(--title-gap) + 0.018em);
   }
   .hero-title .nie {
-    left: calc(50% + var(--pw) / 2 + var(--title-gap));
+    left: calc(50% + var(--pw) / 2 + var(--title-gap) - 0.018em);
   }
   .hero-side {
     display: none;

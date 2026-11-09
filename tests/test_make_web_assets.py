@@ -83,6 +83,36 @@ def test_UT_031_portrait_fits_900x1600_and_small_photos_are_not_enlarged(tmp_pat
     assert Image.open(tmp_path / "small.webp").size == (300, 400)  # never upscaled
 
 
+def test_UT_048_hero_portrait_centres_the_head_and_adds_room_above_it(tmp_path):
+    # A 1000 x 1600 "photo": a green band along the top, blue below, and a red stripe
+    # standing in for her head at 61% across
+    GREEN = (0, 255, 0)
+    photo = Image.new("RGB", (1000, 1600), BLUE)
+    photo.paste(GREEN, (0, 0, 1000, 72))
+    photo.paste(RED, (600, 400, 620, 1600))
+    photo.save(tmp_path / "target.png")
+
+    assets.make_hero_portrait(tmp_path / "target.png", tmp_path / "hero.webp", head_x=0.61, extend_top=0.045)
+
+    hero = Image.open(tmp_path / "hero.webp").convert("RGB")
+    assert Image.open(tmp_path / "hero.webp").format == "WEBP"
+    # the widest crop that keeps x = 61% in the middle is 78% of the width, in the hero's shape
+    assert hero.size == (780, round(780 / assets.HERO_ASPECT))
+    # the "head" is in the middle
+    red = [x for x in range(hero.width) if hero.getpixel((x, 800))[0] > 200 and hero.getpixel((x, 800))[2] < 80]
+    assert abs((red[0] + red[-1]) / 2 - hero.width / 2) <= 2
+    # 72px of soft background were added above, so the photo's green top band now starts lower down
+    assert hero.getpixel((100, 110))[1] > 200  # green: the band moved down by the added strip
+    assert hero.getpixel((100, 250))[2] > 200  # blue below it, as in the photo
+
+
+def test_UT_049_hero_portrait_keeps_the_hero_shape_for_a_very_wide_photo(tmp_path):
+    Image.new("RGB", (1600, 400), BLUE).save(tmp_path / "wide.png")
+    assets.make_hero_portrait(tmp_path / "wide.png", tmp_path / "hero.webp", head_x=0.5)
+    w, h = Image.open(tmp_path / "hero.webp").size
+    assert abs(w / h - assets.HERO_ASPECT) < 0.01
+
+
 def test_UT_032_colour_grid_has_one_pixel_per_mosaic_cell(tmp_path):
     target = Image.new("RGB", (200, 100), RED)
     target.paste(BLUE, (100, 0, 200, 100))  # left red, right blue
@@ -115,4 +145,5 @@ def test_UT_033_main_builds_every_asset_from_the_project_folders(tmp_path, monke
     assert sorted(p.name for p in (public / "tiles" / "lg").iterdir()) == ["tile_001.webp", "tile_002.webp"]
     assert Image.open(public / "mosaic-preview.webp").width == 900
     assert Image.open(public / "portrait.webp").format == "WEBP"
+    assert Image.open(public / "hero-portrait.webp").format == "WEBP"
     assert Image.open(public / "grid.png").size == (3, 5)  # read from mosaic.json

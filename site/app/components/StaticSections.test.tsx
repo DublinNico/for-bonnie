@@ -10,7 +10,7 @@ describe("static sections", () => {
     render(<Hero photoCount={325} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Bonnie");
-    expect(screen.getByRole("img", { name: /Bonnie sitting on a path/ })).toHaveAttribute("src", "/portrait.webp");
+    expect(screen.getByRole("img", { name: /Bonnie sitting on a path/ })).toHaveAttribute("src", "/hero-portrait.webp");
     expect(screen.getByText("A photomosaic · 325 photographs")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Gallery" })).toHaveAttribute("href", "#gallery");
     expect(screen.getByRole("link", { name: /Explore the mosaic/ })).toHaveAttribute("href", "#mosaic");
