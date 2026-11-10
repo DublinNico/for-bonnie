@@ -33,7 +33,8 @@ describe("the page /", () => {
   it("IT-002 the page shows every photo and the counts match the data files", () => {
     expect(html.match(/class="gallery-item"/g)).toHaveLength(tileIds.length);
     expect(html).toContain(`A photomosaic · ${tileIds.length} photographs`);
-    expect(html).toContain(`${mosaic.cols} × ${mosaic.rows} squares`);
+    const squares = (mosaic.cols * mosaic.rows).toLocaleString("en-US");
+    expect(html).toContain(`${mosaic.cols} × ${mosaic.rows} · ${squares} squares · ${tileIds.length} photos`);
   });
 
   it("IT-003 HEAD / answers without a body", async () => {
